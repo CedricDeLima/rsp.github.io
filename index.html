@@ -1,10 +1,171 @@
 <!DOCTYPE html>
-<html>
+<html lang="fr">
 <head>
-  <title>Ma GitHub Page</title>
+<meta charset="UTF-8">
+<title>Test FINDRISC</title>
+
+<style>
+body {
+    font-family: Arial, sans-serif;
+    background: linear-gradient(135deg, #4facfe, #00f2fe);
+    color: #333;
+    text-align: center;
+    padding: 20px;
+}
+
+.container {
+    background: white;
+    border-radius: 15px;
+    padding: 20px;
+    max-width: 600px;
+    margin: auto;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+}
+
+input {
+    padding: 10px;
+    width: 80%;
+    margin-bottom: 20px;
+    border-radius: 10px;
+    border: 1px solid #ccc;
+}
+
+button {
+    margin: 5px;
+    padding: 10px 15px;
+    border: none;
+    border-radius: 25px;
+    cursor: pointer;
+    background: #e0e0e0;
+    transition: 0.3s;
+}
+
+button.selected {
+    background: #4facfe;
+    color: white;
+}
+
+button:hover {
+    transform: scale(1.05);
+}
+
+.question {
+    margin: 20px 0;
+}
+
+#result {
+    margin-top: 20px;
+    font-size: 20px;
+    font-weight: bold;
+}
+</style>
 </head>
+
 <body>
-  <h1>Bienvenue 👋</h1>
-  <p>Mon site est en ligne !</p>
+
+<div class="container">
+<h1>Test FINDRISC</h1>
+
+<!-- ✅ Champ email -->
+<p>Votre email</p>
+<input type="email" id="email" placeholder="ex: nom@email.com" required>
+
+<div class="question" data-name="age">
+<p>Âge</p>
+<button data-value="0">&lt; 45</button>
+<button data-value="2">45–54</button>
+<button data-value="3">55–64</button>
+<button data-value="4">&gt; 64</button>
+</div>
+
+<div class="question" data-name="imc">
+<p>IMC</p>
+<button data-value="0">&lt; 25</button>
+<button data-value="1">25–30</button>
+<button data-value="3">&gt; 30</button>
+</div>
+
+<div class="question" data-name="taille">
+<p>Tour de taille</p>
+<button data-value="0">Normal</button>
+<button data-value="3">Moyen</button>
+<button data-value="4">Élevé</button>
+</div>
+
+<div class="question" data-name="activite">
+<p>Activité physique</p>
+<button data-value="0">Oui</button>
+<button data-value="2">Non</button>
+</div>
+
+<div class="question" data-name="alimentation">
+<p>Fruits/Légumes</p>
+<button data-value="0">Oui</button>
+<button data-value="1">Non</button>
+</div>
+
+<div class="question" data-name="hta">
+<p>Traitement HTA</p>
+<button data-value="0">Non</button>
+<button data-value="2">Oui</button>
+</div>
+
+<div class="question" data-name="glycemie">
+<p>Glycémie élevée passée</p>
+<button data-value="0">Non</button>
+<button data-value="5">Oui</button>
+</div>
+
+<div class="question" data-name="famille">
+<p>Antécédents familiaux</p>
+<button data-value="0">Aucun</button>
+<button data-value="3">Éloigné</button>
+<button data-value="5">Proche</button>
+</div>
+
+<button onclick="calculer()">Calculer le score</button>
+
+<div id="result"></div>
+
+</div>
+
+<script>
+let selections = {};
+
+document.querySelectorAll('.question button').forEach(btn => {
+    btn.addEventListener('click', () => {
+        let parent = btn.parentElement;
+        parent.querySelectorAll('button').forEach(b => b.classList.remove('selected'));
+        btn.classList.add('selected');
+        selections[parent.dataset.name] = parseInt(btn.dataset.value);
+    });
+});
+
+function calculer() {
+    let email = document.getElementById("email").value;
+
+    if (!email) {
+        alert("Veuillez entrer votre email");
+        return;
+    }
+
+    let total = 0;
+    for (let key in selections) {
+        total += selections[key];
+    }
+
+    let interpretation = "";
+
+    if (total <= 6) interpretation = "Faible (~1%)";
+    else if (total <= 11) interpretation = "Légèrement élevé (~4%)";
+    else if (total <= 14) interpretation = "Modéré (~17%)";
+    else if (total <= 20) interpretation = "Élevé (~33%)";
+    else interpretation = "Très élevé (~50%)";
+
+    document.getElementById("result").innerHTML =
+        "Email : " + email + "<br>Score : " + total + "<br>Risque : " + interpretation;
+}
+</script>
+
 </body>
 </html>
