@@ -3,181 +3,206 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
 <title>Test FINDRISC</title>
 
 <style>
 body {
-    font-family: Arial, sans-serif;
+    font-family: Arial;
     background: linear-gradient(135deg, #4facfe, #00f2fe);
-    color: #333;
-    text-align: center;
-    padding: 10px;
     margin: 0;
+    padding: 10px;
+    text-align: center;
 }
 
 .container {
     background: white;
     border-radius: 15px;
-    padding: 15px;
-    max-width: 600px;
-    width: 100%;
+    padding: 20px;
+    max-width: 500px;
     margin: auto;
     box-shadow: 0 10px 30px rgba(0,0,0,0.2);
 }
 
-h1 {
-    font-size: 22px;
+.progress {
+    height: 10px;
+    background: #eee;
+    border-radius: 10px;
+    margin-bottom: 20px;
 }
 
-input {
-    padding: 12px;
-    width: 100%;
-    margin-bottom: 20px;
+.progress-bar {
+    height: 10px;
+    background: #4facfe;
+    width: 0%;
     border-radius: 10px;
-    border: 1px solid #ccc;
-    font-size: 16px;
+    transition: 0.3s;
 }
 
 button {
-    margin: 5px;
+    display: block;
+    width: 100%;
+    margin: 10px 0;
     padding: 12px;
     border: none;
     border-radius: 25px;
-    cursor: pointer;
     background: #e0e0e0;
-    transition: 0.3s;
     font-size: 16px;
-    width: 100%;
-    max-width: 250px;
+    cursor: pointer;
 }
 
-button.selected {
+button:hover {
     background: #4facfe;
     color: white;
 }
 
-button:hover {
-    transform: scale(1.03);
-}
-
-.question {
-    margin: 20px 0;
-}
-
 #result {
-    margin-top: 20px;
-    font-size: 18px;
+    font-size: 20px;
     font-weight: bold;
 }
-
 </style>
 </head>
 
 <body>
 
 <div class="container">
-<h1>Test FINDRISC</h1>
 
-<!-- ✅ Champ email -->
-<p>Votre email</p>
-<input type="email" id="email" placeholder="ex: nom@email.com" required>
+<h2>Test FINDRISC</h2>
 
-<div class="question" data-name="age">
-<p>Âge</p>
-<button data-value="0">&lt; 45</button>
-<button data-value="2">45–54</button>
-<button data-value="3">55–64</button>
-<button data-value="4">&gt; 64</button>
+<input type="email" id="email" placeholder="Votre email" required>
+
+<div class="progress">
+    <div class="progress-bar" id="progressBar"></div>
 </div>
 
-<div class="question" data-name="imc">
-<p>IMC</p>
-<button data-value="0">&lt; 25</button>
-<button data-value="1">25–30</button>
-<button data-value="3">&gt; 30</button>
-</div>
+<div id="question"></div>
 
-<div class="question" data-name="taille">
-<p>Tour de taille</p>
-<button data-value="0">Normal</button>
-<button data-value="3">Moyen</button>
-<button data-value="4">Élevé</button>
-</div>
-
-<div class="question" data-name="activite">
-<p>Activité physique</p>
-<button data-value="0">Oui</button>
-<button data-value="2">Non</button>
-</div>
-
-<div class="question" data-name="alimentation">
-<p>Fruits/Légumes</p>
-<button data-value="0">Oui</button>
-<button data-value="1">Non</button>
-</div>
-
-<div class="question" data-name="hta">
-<p>Traitement HTA</p>
-<button data-value="0">Non</button>
-<button data-value="2">Oui</button>
-</div>
-
-<div class="question" data-name="glycemie">
-<p>Glycémie élevée passée</p>
-<button data-value="0">Non</button>
-<button data-value="5">Oui</button>
-</div>
-
-<div class="question" data-name="famille">
-<p>Antécédents familiaux</p>
-<button data-value="0">Aucun</button>
-<button data-value="3">Éloigné</button>
-<button data-value="5">Proche</button>
-</div>
-
-<button onclick="calculer()">Calculer le score</button>
+<div id="answers"></div>
 
 <div id="result"></div>
 
 </div>
 
 <script>
-let selections = {};
 
-document.querySelectorAll('.question button').forEach(btn => {
-    btn.addEventListener('click', () => {
-        let parent = btn.parentElement;
-        parent.querySelectorAll('button').forEach(b => b.classList.remove('selected'));
-        btn.classList.add('selected');
-        selections[parent.dataset.name] = parseInt(btn.dataset.value);
-    });
-});
+let step = 0;
+let score = 0;
 
-function calculer() {
-    let email = document.getElementById("email").value;
+const questions = [
 
-    if (!email) {
-        alert("Veuillez entrer votre email");
+{
+    text: "Quel est votre âge ?",
+    options: [
+        {label: "< 45 ans", points: 0},
+        {label: "45–54 ans", points: 2},
+        {label: "55–64 ans", points: 3},
+        {label: "> 64 ans", points: 4}
+    ]
+},
+
+{
+    text: "Votre IMC ?",
+    options: [
+        {label: "< 25", points: 0},
+        {label: "25–30", points: 1},
+        {label: "> 30", points: 3}
+    ]
+},
+
+{
+    text: "Activité physique quotidienne ?",
+    options: [
+        {label: "Oui", points: 0},
+        {label: "Non", points: 2}
+    ]
+},
+
+{
+    text: "Consommez-vous des fruits/légumes ?",
+    options: [
+        {label: "Oui", points: 0},
+        {label: "Non", points: 1}
+    ]
+},
+
+{
+    text: "Traitement antihypertenseur ?",
+    options: [
+        {label: "Non", points: 0},
+        {label: "Oui", points: 2}
+    ]
+},
+
+{
+    text: "Glycémie élevée dans le passé ?",
+    options: [
+        {label: "Non", points: 0},
+        {label: "Oui", points: 5}
+    ]
+},
+
+{
+    text: "Antécédents familiaux ?",
+    options: [
+        {label: "Aucun", points: 0},
+        {label: "Éloigné", points: 3},
+        {label: "Proche", points: 5}
+    ]
+}
+
+];
+
+function showQuestion() {
+
+    if (step >= questions.length) {
+        showResult();
         return;
     }
 
-    let total = 0;
-    for (let key in selections) {
-        total += selections[key];
-    }
+    let q = questions[step];
+
+    document.getElementById("question").innerHTML = `<p>${q.text}</p>`;
+
+    let answersHTML = "";
+
+    q.options.forEach(option => {
+        answersHTML += `<button onclick="nextStep(${option.points})">${option.label}</button>`;
+    });
+
+    document.getElementById("answers").innerHTML = answersHTML;
+
+    updateProgress();
+}
+
+function nextStep(points) {
+    score += points;
+    step++;
+    showQuestion();
+}
+
+function updateProgress() {
+    let progress = (step / questions.length) * 100;
+    document.getElementById("progressBar").style.width = progress + "%";
+}
+
+function showResult() {
 
     let interpretation = "";
 
-    if (total <= 6) interpretation = "Faible (~1%)";
-    else if (total <= 11) interpretation = "Légèrement élevé (~4%)";
-    else if (total <= 14) interpretation = "Modéré (~17%)";
-    else if (total <= 20) interpretation = "Élevé (~33%)";
+    if (score <= 6) interpretation = "Faible (~1%)";
+    else if (score <= 11) interpretation = "Légèrement élevé (~4%)";
+    else if (score <= 14) interpretation = "Modéré (~17%)";
+    else if (score <= 20) interpretation = "Élevé (~33%)";
     else interpretation = "Très élevé (~50%)";
 
+    document.getElementById("question").innerHTML = "";
+    document.getElementById("answers").innerHTML = "";
+
     document.getElementById("result").innerHTML =
-        "Email : " + email + "<br>Score : " + total + "<br>Risque : " + interpretation;
+        `Score : ${score}<br>Risque : ${interpretation}`;
 }
+
+showQuestion();
+
 </script>
 
 </body>
