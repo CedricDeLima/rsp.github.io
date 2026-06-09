@@ -67,6 +67,16 @@ button:hover {
 <div class="container">
 
 <h2>Test FINDRISC</h2>
+<!-- ✅ 1. Charger la librairie Supabase -->
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js"></script>
+
+  <!-- ✅ 2. Ton script -->
+  <script>
+    const supabase = window.supabase.createClient(
+      "https://xrtmlddmoepmomvtjgok.supabase.co",
+      "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InhydG1sZGRtb2VwbW9tdnRqZ29rIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODA3NTE2NTEsImV4cCI6MjA5NjMyNzY1MX0.NL1O4kB1GRcEN_Ss4eVRfb3f_j7MbKFiWcScS4FMD5o"
+    );
+  </script>
 
 <input type="email" id="email" placeholder="Votre email" required>
 
