@@ -160,7 +160,8 @@ const questions = [
 }
 
 ];
-
+function getEvent() { const params = new URLSearchParams(window.location.search); return
+params.get("event") || "Hors evenement"; }
 function showQuestion() {
 
     if (step >= questions.length) {
@@ -212,7 +213,11 @@ function showResult() {
 }
 
 showQuestion();
-
+document.querySelector("form").addEventListener("submit", async (e) => { e.preventDefault();
+const formData = new FormData(e.target); const data = { name: formData.get("name"), email:
+formData.get("email"), message: formData.get("message"), event: getEvent() }; const { error } =
+await supabase .from("form_responses") .insert([data]); if (error) { alert("Erreur : " + error.message);
+} else { alert("Formulaire envoyé !"); e.target.reset(); } });
 </script>
 
 </body>
