@@ -593,7 +593,7 @@ async function exportCSV() {
   ]);
 
   const csv = [headers, ...rows].map(r => r.map(v => `"${v}"`).join(',')).join('\n');
-  const blob = new Blob(['\uFEFF' + csv, { type: 'text/csv;charset=utf-8;' }]);
+  const blob = new Blob(['\uFEFF' + csv], { type: 'text/csv;charset=utf-8;' });
 
   // Nom du fichier avec les filtres actifs
   let filename = 'findrisc_export';
