@@ -175,8 +175,9 @@
   <div class="auth-card">
     <h1>🔐 Admin FINDRISC</h1>
     <p>Accès réservé aux administrateurs</p>
-    <input type="password" class="auth-input" id="passwordInput" placeholder="Mot de passe" onkeydown="if(event.key==='Enter')checkAuth()">
-    <button class="auth-btn" onclick="checkAuth()">Accéder</button>
+    <input type="password" class="auth-input" id="passwordInput" placeholder="Mot de passe">
+    <button class="auth-btn" id="authBtn">Accéder</button>
+
     <div class="auth-error" id="authError">Mot de passe incorrect</div>
   </div>
 </div>
@@ -287,6 +288,21 @@
 </div>
 
 <script>
+ document.addEventListener('DOMContentLoaded', () => {
+  document.getElementById('authBtn').addEventListener('click', checkAuth);
+  document.getElementById('passwordInput').addEventListener('keydown', e => {
+    if (e.key === 'Enter') checkAuth();
+  });
+
+  // Auto-check URL param
+  const urlParams = new URLSearchParams(window.location.search);
+  if (urlParams.get('access') === ACCESS_KEY) {
+    document.getElementById('authScreen').style.display = 'none';
+    document.getElementById('mainApp').style.display = 'block';
+    init();
+  }
+});
+
 const SUPABASE_URL = 'https://xrtmlddmoepmomvtjgok.supabase.co';
 const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InhydG1sZGRtb2VwbW9tdnRqZ29rIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODA3NTE2NTEsImV4cCI6MjA5NjMyNzY1MX0.NL1O4kB1GRcEN_Ss4eVRfb3f_j7MbKFiWcScS4FMD5o';
 const BASE_URL = 'https://cedricdelima.github.io/rsp.github.io/index.html';
