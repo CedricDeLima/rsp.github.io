@@ -293,8 +293,8 @@ const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZ
 const BASE_URL = 'https://cedricdelima.github.io/rsp.github.io/index.html';
 const ACCESS_KEY = 'rsp2025';
 
-const { createClient } = supabase;
-const db = createClient(SUPABASE_URL, SUPABASE_KEY);
+const db = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+
 
 let allData = [];
 let events = [];
