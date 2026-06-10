@@ -97,71 +97,92 @@ button:hover {
 let step = 0;
 let score = 0;
 
+let answersData = {
+    age: null,
+    IMC: null,
+    Act_physique: null,
+    fruits_legumes: null,
+    trait_hypertenseur: null,
+    glycemie: null,
+    antécédents: null
+};
+
 const questions = [
 
 {
+    key: "age",
     text: "Quel est votre âge ?",
     options: [
-        {label: "< 45 ans", points: 0},
-        {label: "45–54 ans", points: 2},
-        {label: "55–64 ans", points: 3},
-        {label: "> 64 ans", points: 4}
+        {label: "< 45 ans", value: "<45", points: 0},
+        {label: "45–54 ans", value: "45-54", points: 2},
+        {label: "55–64 ans", value: "55-64", points: 3},
+        {label: "> 64 ans", value: ">64", points: 4}
     ]
 },
 
 {
+    key: "IMC",
     text: "Votre IMC ?",
     options: [
-        {label: "< 25", points: 0},
-        {label: "25–30", points: 1},
-        {label: "> 30", points: 3}
+        {label: "< 25", value: "<25", points: 0},
+        {label: "25–30", value: "25-30", points: 1},
+        {label: "> 30", value: ">30", points: 3}
     ]
 },
 
 {
+    key: "Act_physique",
     text: "Activité physique quotidienne ?",
     options: [
-        {label: "Oui", points: 0},
-        {label: "Non", points: 2}
+        {label: "Oui", value: true, points: 0},
+        {label: "Non", value: false, points: 2}
     ]
 },
 
 {
+    key: "fruits_legumes",
     text: "Consommez-vous des fruits/légumes ?",
     options: [
-        {label: "Oui", points: 0},
-        {label: "Non", points: 1}
+        {label: "Oui", value: true, points: 0},
+        {label: "Non", value: false, points: 1}
     ]
 },
 
 {
+    key: "trait_hypertenseur",
     text: "Traitement antihypertenseur ?",
     options: [
-        {label: "Non", points: 0},
-        {label: "Oui", points: 2}
+        {label: "Non", value: false, points: 0},
+        {label: "Oui", value: true, points: 2}
     ]
 },
 
 {
+    key: "glycemie",
     text: "Glycémie élevée dans le passé ?",
     options: [
-        {label: "Non", points: 0},
-        {label: "Oui", points: 5}
+        {label: "Non", value: false, points: 0},
+        {label: "Oui", value: true, points: 5}
     ]
 },
 
 {
+    key: "antécédents",
     text: "Antécédents familiaux ?",
     options: [
-        {label: "Aucun", points: 0},
-        {label: "Éloigné", points: 3},
-        {label: "Proche", points: 5}
+        {label: "Aucun", value: "aucun", points: 0},
+        {label: "Éloigné", value: "eloigne", points: 3},
+        {label: "Proche", value: "proche", points: 5}
     ]
 }
 
 ];
-function getEvent() { const params = new URLSearchParams(window.location.search); return
-params.get("event") || "Hors evenement"; }
+
+function getEvent() {
+    const params = new URLSearchParams(window.location.search);
+    return params.get("event") || "Hors evenement";
+}
+
 function showQuestion() {
 
     if (step >= questions.length) {
@@ -176,7 +197,11 @@ function showQuestion() {
     let answersHTML = "";
 
     q.options.forEach(option => {
-        answersHTML += `<button onclick="nextStep(${option.points})">${option.label}</button>`;
+        answersHTML += `
+        <button type="button"
+        onclick="nextStep('${q.key}', '${option.value}', ${option.points})">
+        ${option.label}
+        </button>`;
     });
 
     document.getElementById("answers").innerHTML = answersHTML;
@@ -184,8 +209,15 @@ function showQuestion() {
     updateProgress();
 }
 
-function nextStep(points) {
+function nextStep(key, value, points) {
+
+    // ✅ conversion boolean propre
+    if (value === "true") value = true;
+    if (value === "false") value = false;
+
+    answersData[key] = value;
     score += points;
+
     step++;
     showQuestion();
 }
@@ -195,7 +227,7 @@ function updateProgress() {
     document.getElementById("progressBar").style.width = progress + "%";
 }
 
-function showResult() {
+async function showResult() {
 
     let interpretation = "";
 
@@ -210,15 +242,46 @@ function showResult() {
 
     document.getElementById("result").innerHTML =
         `Score : ${score}<br>Risque : ${interpretation}`;
+
+    await sendToSupabase();
+}
+
+async function sendToSupabase() {
+
+    const email = document.getElementById("email").value;
+
+    if (!email) {
+        alert("Email requis");
+        return;
+    }
+
+    const payload = {
+        email: email,
+        age: answersData.age,
+        IMC: answersData.IMC,
+        Act_physique: answersData.Act_physique,
+        fruits_legumes: answersData.fruits_legumes,
+        trait_hypertenseur: answersData.trait_hypertenseur,
+        glycemie: answersData.glycemie,
+        "antécédents": answersData.antécédents,
+        event: getEvent()
+    };
+
+    const { error } = await supabase
+        .from("form_responses")
+        .insert([payload]);
+
+    if (error) {
+        alert("Erreur : " + error.message);
+    } else {
+        console.log("✅ Données envoyées", payload);
+    }
 }
 
 showQuestion();
-document.querySelector("form").addEventListener("submit", async (e) => { e.preventDefault();
-const formData = new FormData(e.target); const data = { name: formData.get("name"), email:
-formData.get("email"), message: formData.get("message"), event: getEvent() }; const { error } =
-await supabase .from("form_responses") .insert([data]); if (error) { alert("Erreur : " + error.message);
-} else { alert("Formulaire envoyé !"); e.target.reset(); } });
+
 </script>
+
 
 </body>
 </html>
