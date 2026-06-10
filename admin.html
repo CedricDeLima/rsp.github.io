@@ -186,7 +186,7 @@
 <div id="mainApp">
 
   <div class="topbar">
-    <h1>📊 Console Admin</h1>
+    <h1>📊 FINDRISC Admin</h1>
     <div class="topbar-right">
       <button class="btn btn-green" onclick="exportCSV()">⬇️ Export CSV</button>
       <button class="btn btn-gray" onclick="logout()">Déconnexion</button>
@@ -208,10 +208,6 @@
       <div class="stat-card">
         <div class="stat-num" id="statEvents">–</div>
         <div class="stat-label">Événements actifs</div>
-      </div>
-      <div class="stat-card">
-        <div class="stat-num" id="statHighRisk" style="color:#f87171">–</div>
-        <div class="stat-label">Risque élevé+</div>
       </div>
     </div>
 
@@ -352,8 +348,6 @@ async function loadStats() {
   document.getElementById('statToday').textContent = todayCount;
   const activeEvents = [...new Set(data.map(r => r.event).filter(Boolean))];
   document.getElementById('statEvents').textContent = activeEvents.length;
-  const highRisk = data.filter(r => calcScoreFromRow(r) >= 15).length;
-  document.getElementById('statHighRisk').textContent = highRisk;
 }
 
 // ==================== SCORE ====================
