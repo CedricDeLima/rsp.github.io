@@ -209,16 +209,12 @@
         <div class="stat-label">Réponses totales</div>
       </div>
       <div class="stat-card">
+        <div class="stat-value" id="statToday">–</div>
+        <div class="stat-label">Aujourd'hui</div>
+      </div>
+      <div class="stat-card">
         <div class="stat-value" id="statEvents">–</div>
         <div class="stat-label">Événements actifs</div>
-      </div>
-      <div class="stat-card">
-        <div class="stat-value" id="statHighRisk">–</div>
-        <div class="stat-label">Score ≥ 15 (risque élevé)</div>
-      </div>
-      <div class="stat-card">
-        <div class="stat-value" id="statAvgScore">–</div>
-        <div class="stat-label">Score moyen</div>
       </div>
     </div>
 
@@ -445,17 +441,15 @@ function clearFilters() {
 // STATS
 // ====================
 function updateStats() {
-  document.getElementById('statTotal').textContent = allData.length;
-
-  const activeEvents = events.filter(e => e.status === 'active');
+  const { data } = await db.from('FindRISC_Form_Responses').select('*');
+  if (!data) return;
+  allData = data;
+  document.getElementById('statTotal').textContent = data.length;
+  const today = new Date().toISOString().split('T')[0];
+  const todayCount = data.filter(r => r.created_at && r.created_at.startsWith(today)).length;
+  document.getElementById('statToday').textContent = todayCount;
+  const activeEvents = [...new Set(data.map(r => r.event).filter(Boolean))];
   document.getElementById('statEvents').textContent = activeEvents.length;
-
-  const scores = allData.map(r => calcScoreFromRow(r));
-  const highRisk = scores.filter(s => s >= 15).length;
-  document.getElementById('statHighRisk').textContent = highRisk;
-
-  const avg = scores.length ? (scores.reduce((a, b) => a + b, 0) / scores.length).toFixed(1) : '–';
-  document.getElementById('statAvgScore').textContent = avg;
 }
 
 // ====================
