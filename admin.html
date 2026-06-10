@@ -179,10 +179,10 @@
   <div class="auth-card">
     <h1>🔐 Administration questionnaire ReSpoP</h1>
     <p>Accès réservé aux administrateurs</p>
-    <form id="authForm">
-      <input type="email" class="auth-input" id="emailInput" placeholder="Email admin" required autocomplete="email">
-      <input type="password" class="auth-input" id="passwordInput" placeholder="Mot de passe" required autocomplete="current-password">
-      <button type="submit" class="auth-btn" id="authBtn">Accéder</button>
+    <form onsubmit="event.preventDefault(); checkAuth()">
+      <input type="email" class="auth-input" id="emailInput" placeholder="Email" required>
+      <input type="password" class="auth-input" id="passwordInput" placeholder="Mot de passe" required>
+      <button type="submit" class="auth-btn">Accéder</button>
     </form>
     <div class="auth-error" id="authError">Email ou mot de passe incorrect</div>
   </div>
@@ -324,26 +324,35 @@ document.addEventListener('DOMContentLoaded', async () => {
 });
 
 async function checkAuth() {
-  const email = document.getElementById('emailInput').value.trim();
+  const email = document.getElementById('emailInput').value;
   const password = document.getElementById('passwordInput').value;
-  const btn = document.getElementById('authBtn');
-  const errEl = document.getElementById('authError');
-
-  btn.textContent = '⏳ Connexion...';
-  btn.disabled = true;
-  errEl.style.display = 'none';
 
   const { data, error } = await db.auth.signInWithPassword({ email, password });
 
   if (error) {
-    errEl.style.display = 'block';
-    btn.textContent = 'Accéder';
-    btn.disabled = false;
+    document.getElementById('authError').style.display = 'block';
     return;
   }
 
-  showApp(data.user.email);
+  // Connexion réussie
+  document.getElementById('authScreen').style.display = 'none';
+  document.getElementById('mainApp').style.display = 'block';
+  init();
 }
+
+async function logout() {
+  await db.auth.signOut();
+  location.reload();
+}
+
+// Vérifie si déjà connecté au chargement
+document.addEventListener('DOMContentLoaded', async () => {
+  const { data: { session } } = await db.auth.getSession();
+  if (session) {
+    document.getElementById('authScreen').style.display = 'none';
+    document.getElementById('mainApp').style.display = 'block';
+    init();
+  }
 
 function showApp(email) {
   document.getElementById('authScreen').style.display = 'none';
