@@ -288,25 +288,10 @@
 </div>
 
 <script>
- document.addEventListener('DOMContentLoaded', () => {
-  document.getElementById('authBtn').addEventListener('click', checkAuth);
-  document.getElementById('passwordInput').addEventListener('keydown', e => {
-    if (e.key === 'Enter') checkAuth();
-  });
-
-  // Auto-check URL param
-  const urlParams = new URLSearchParams(window.location.search);
-  if (urlParams.get('access') === ACCESS_KEY) {
-    document.getElementById('authScreen').style.display = 'none';
-    document.getElementById('mainApp').style.display = 'block';
-    init();
-  }
-});
-
 const SUPABASE_URL = 'https://xrtmlddmoepmomvtjgok.supabase.co';
 const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InhydG1sZGRtb2VwbW9tdnRqZ29rIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODA3NTE2NTEsImV4cCI6MjA5NjMyNzY1MX0.NL1O4kB1GRcEN_Ss4eVRfb3f_j7MbKFiWcScS4FMD5o';
 const BASE_URL = 'https://cedricdelima.github.io/rsp.github.io/index.html';
-const ACCESS_KEY = 'rsp2025'; // <- mot de passe admin
+const ACCESS_KEY = 'rsp2025';
 
 const { createClient } = supabase;
 const db = createClient(SUPABASE_URL, SUPABASE_KEY);
@@ -314,6 +299,20 @@ const db = createClient(SUPABASE_URL, SUPABASE_KEY);
 let allData = [];
 let events = [];
 let currentQRUrl = '';
+
+document.addEventListener('DOMContentLoaded', () => {
+  document.getElementById('authBtn').addEventListener('click', checkAuth);
+  document.getElementById('passwordInput').addEventListener('keydown', e => {
+    if (e.key === 'Enter') checkAuth();
+  });
+
+  const urlParams = new URLSearchParams(window.location.search);
+  if (urlParams.get('access') === ACCESS_KEY) {
+    document.getElementById('authScreen').style.display = 'none';
+    document.getElementById('mainApp').style.display = 'block';
+    init();
+  }
+});
 
 // ==================== AUTH ====================
 function checkAuth() {
@@ -335,16 +334,6 @@ function logout() {
   document.getElementById('mainApp').style.display = 'none';
 }
 
-// Auto-check URL param
-window.addEventListener('DOMContentLoaded', () => {
-  const urlParams = new URLSearchParams(window.location.search);
-  if (urlParams.get('access') === ACCESS_KEY) {
-    document.getElementById('authScreen').style.display = 'none';
-    document.getElementById('mainApp').style.display = 'block';
-    init();
-  }
-});
-
 // ==================== INIT ====================
 async function init() {
   await loadStats();
@@ -356,23 +345,18 @@ async function init() {
 async function loadStats() {
   const { data } = await db.from('FindRISC_Form_Responses').select('*');
   if (!data) return;
-  
   allData = data;
   document.getElementById('statTotal').textContent = data.length;
-  
   const today = new Date().toISOString().split('T')[0];
   const todayCount = data.filter(r => r.created_at && r.created_at.startsWith(today)).length;
   document.getElementById('statToday').textContent = todayCount;
-  
   const activeEvents = [...new Set(data.map(r => r.event).filter(Boolean))];
   document.getElementById('statEvents').textContent = activeEvents.length;
-  
-  // High risk: score >= 15 (élevé+)
   const highRisk = data.filter(r => calcScoreFromRow(r) >= 15).length;
   document.getElementById('statHighRisk').textContent = highRisk;
 }
 
-// ==================== SCORE CALC ====================
+// ==================== SCORE ====================
 function calcScoreFromRow(r) {
   let s = 0;
   const ageMap = {'<45':0,'45-54':2,'55-64':3,'≥65':4};
@@ -399,11 +383,7 @@ function getRiskLabel(score) {
 // ==================== EVENTS ====================
 async function loadEvents() {
   const { data } = await db.from('FindRISC_Form_Responses').select('event');
-  
-  // Build local storage events list
   const stored = JSON.parse(localStorage.getItem('findrisc_events') || '[]');
-  
-  // Add events from DB not in stored
   if (data) {
     data.forEach(r => {
       if (r.event && r.event !== 'direct' && !stored.find(e => e.name === r.event)) {
@@ -411,7 +391,6 @@ async function loadEvents() {
       }
     });
   }
-  
   events = stored;
   renderEvents();
   populateFilterEvents();
@@ -419,22 +398,17 @@ async function loadEvents() {
 
 function renderEvents() {
   const container = document.getElementById('eventList');
-  
   if (events.length === 0) {
-    container.innerHTML = '<div style="color:#64748b; text-align:center; padding:40px;">Aucun événement créé</div>';
+    container.innerHTML = '<div style="color:#64748b;text-align:center;padding:40px;">Aucun événement créé</div>';
     return;
   }
-  
-  // Count responses per event
   const counts = {};
   allData.forEach(r => { if (r.event) counts[r.event] = (counts[r.event] || 0) + 1; });
-  
   container.innerHTML = events.map((ev, idx) => {
     const url = `${BASE_URL}?event=${encodeURIComponent(ev.name)}`;
     const count = counts[ev.name] || 0;
     const statusClass = ev.status === 'archived' ? 'status-archived' : 'status-active';
     const statusLabel = ev.status === 'archived' ? 'Archivé' : 'Actif';
-    
     return `
       <div class="event-item" id="event-${idx}">
         <div class="event-info">
@@ -449,11 +423,8 @@ function renderEvents() {
           <button class="btn btn-yellow" onclick="toggleArchive(${idx})">${ev.status === 'archived' ? '♻️ Restaurer' : '📦 Archiver'}</button>
           <button class="btn btn-red" onclick="deleteEvent(${idx})">🗑️ Supprimer</button>
         </div>
-      </div>
-    `;
+      </div>`;
   }).join('');
-  
-  // Generate mini QR codes
   events.forEach((ev, idx) => {
     const url = `${BASE_URL}?event=${encodeURIComponent(ev.name)}`;
     const wrap = document.getElementById(`qr-mini-${idx}`);
@@ -467,16 +438,12 @@ function renderEvents() {
 async function createEvent() {
   const input = document.getElementById('newEventName');
   const name = input.value.trim().replace(/\s+/g, '_');
-  
   if (!name) { alert('Entrez un nom d\'événement'); return; }
   if (events.find(e => e.name === name)) { alert('Cet événement existe déjà'); return; }
-  
   events.unshift({ name, status: 'active', created: new Date().toISOString() });
   saveEvents();
   input.value = '';
   renderEvents();
-  
-  // Auto-show QR for new event
   showQR(0);
 }
 
@@ -487,7 +454,7 @@ function toggleArchive(idx) {
 }
 
 function deleteEvent(idx) {
-  if (!confirm(`Supprimer l'événement "${events[idx].name}" ? Les données en base ne seront pas supprimées.`)) return;
+  if (!confirm(`Supprimer "${events[idx].name}" ?`)) return;
   events.splice(idx, 1);
   saveEvents();
   renderEvents();
@@ -504,7 +471,6 @@ function populateFilterEvents() {
   events.forEach(ev => {
     sel.innerHTML += `<option value="${ev.name}" ${ev.name === current ? 'selected' : ''}>${ev.name}</option>`;
   });
-  // Also add events from DB not in list
   const dbEvents = [...new Set(allData.map(r => r.event).filter(Boolean))];
   dbEvents.forEach(ev => {
     if (!events.find(e => e.name === ev)) {
@@ -518,20 +484,11 @@ function showQR(idx) {
   const ev = events[idx];
   const url = `${BASE_URL}?event=${encodeURIComponent(ev.name)}`;
   currentQRUrl = url;
-  
   document.getElementById('modalTitle').textContent = '📍 ' + ev.name;
   document.getElementById('modalUrl').textContent = url;
-  
   const qrDiv = document.getElementById('modalQR');
   qrDiv.innerHTML = '';
-  new QRCode(qrDiv, {
-    text: url,
-    width: 200, height: 200,
-    colorDark: '#000000',
-    colorLight: '#ffffff',
-    correctLevel: QRCode.CorrectLevel.H
-  });
-  
+  new QRCode(qrDiv, { text: url, width: 200, height: 200, colorDark: '#000000', colorLight: '#ffffff', correctLevel: QRCode.CorrectLevel.H });
   document.getElementById('qrModal').classList.add('show');
 }
 
@@ -555,33 +512,26 @@ function copyUrl() {
 // ==================== DATA TABLE ====================
 async function loadData() {
   let query = db.from('FindRISC_Form_Responses').select('*').order('created_at', { ascending: false });
-  
   const eventFilter = document.getElementById('filterEvent')?.value;
   const dateFrom = document.getElementById('filterDateFrom')?.value;
   const dateTo = document.getElementById('filterDateTo')?.value;
-  
   if (eventFilter) query = query.eq('event', eventFilter);
   if (dateFrom) query = query.gte('created_at', dateFrom);
   if (dateTo) query = query.lte('created_at', dateTo + 'T23:59:59');
-  
   const { data, error } = await query.limit(500);
-  
   const tbody = document.getElementById('dataBody');
   if (error || !data) {
     tbody.innerHTML = '<tr><td colspan="11" style="text-align:center;color:#f87171;padding:40px;">Erreur de chargement</td></tr>';
     return;
   }
-  
   if (data.length === 0) {
     tbody.innerHTML = '<tr><td colspan="11" style="text-align:center;color:#64748b;padding:40px;">Aucune donnée</td></tr>';
     return;
   }
-  
   tbody.innerHTML = data.map(r => {
     const score = calcScoreFromRow(r);
     const date = r.created_at ? new Date(r.created_at).toLocaleDateString('fr-FR', {day:'2-digit',month:'2-digit',year:'numeric',hour:'2-digit',minute:'2-digit'}) : '–';
     const b = (v) => v === true ? '<span class="bool-yes">✅</span>' : v === false ? '<span class="bool-no">❌</span>' : '–';
-    
     return `<tr>
       <td>${date}</td>
       <td>${r.email || '–'}</td>
@@ -592,7 +542,7 @@ async function loadData() {
       <td>${b(r.trait_hypertenseur)}</td>
       <td>${b(r.glycemie)}</td>
       <td>${r.antécédents || '–'}</td>
-      <td><span style="background:#1e3a5f; padding:2px 8px; border-radius:12px; font-size:0.78rem">${r.event || 'direct'}</span></td>
+      <td><span style="background:#1e3a5f;padding:2px 8px;border-radius:12px;font-size:0.78rem">${r.event || 'direct'}</span></td>
       <td><strong>${score}</strong> ${getRiskLabel(score)}</td>
     </tr>`;
   }).join('');
@@ -605,4 +555,34 @@ function clearFilters() {
   loadData();
 }
 
-// ====================
+function showTab(name) {
+  document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+  document.querySelectorAll('.tab-content').forEach(t => t.classList.remove('active'));
+  document.getElementById('tab-' + name).classList.add('active');
+  event.target.classList.add('active');
+}
+
+function exportCSV() {
+  if (!allData.length) { alert('Aucune donnée'); return; }
+  const headers = ['date','email','age','IMC','activite_physique','fruits_legumes','hypertenseur','glycemie','antecedents','evenement','score'];
+  const rows = allData.map(r => [
+    r.created_at ? new Date(r.created_at).toLocaleString('fr-FR') : '',
+    r.email || '',
+    r.age || '',
+    r.IMC || '',
+    r.Act_physique,
+    r.fruits_legumes,
+    r.trait_hypertenseur,
+    r.glycemie,
+    r.antécédents || '',
+    r.event || 'direct',
+    calcScoreFromRow(r)
+  ]);
+  const csv = [headers, ...rows].map(r => r.map(v => `"${v}"`).join(',')).join('\n');
+  const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
+  const link = document.createElement('a');
+  link.href = URL.createObjectURL(blob);
+  link.download = 'findrisc_export_' + new Date().toISOString().split('T')[0] + '.csv';
+  link.click();
+}
+</script>
