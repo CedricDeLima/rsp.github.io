@@ -9,186 +9,609 @@
 <script src="https://cdn.jsdelivr.net/npm/qrcodejs@1.0.0/qrcode.min.js"></script>
 
 <style>
+* { box-sizing: border-box; margin: 0; padding: 0; }
+
 body {
-  font-family: Arial;
+  font-family: 'Segoe UI', sans-serif;
+  background: #0f172a;
+  color: #e2e8f0;
+  min-height: 100vh;
+}
+
+.hidden { display: none !important; }
+
+/* ── LOGIN ── */
+#loginScreen {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 100vh;
+}
+
+.login-card {
+  background: #1e293b;
+  border-radius: 16px;
+  padding: 40px;
+  width: 380px;
+  box-shadow: 0 8px 32px rgba(0,0,0,0.5);
+}
+
+.login-card h2 {
+  font-size: 1.4rem;
+  margin-bottom: 6px;
+  color: #f1f5f9;
+}
+
+.login-card p {
+  color: #64748b;
+  font-size: 0.85rem;
+  margin-bottom: 28px;
+}
+
+.field {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  margin-bottom: 16px;
+}
+
+.field label {
+  font-size: 0.82rem;
+  color: #94a3b8;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.field input {
+  padding: 12px 14px;
+  border-radius: 8px;
+  border: 2px solid #334155;
   background: #0f172a;
   color: white;
-  margin: 0;
+  font-size: 0.95rem;
+  outline: none;
+  transition: border-color 0.2s;
 }
 
-.hidden { display: none; }
+.field input:focus { border-color: #3b82f6; }
 
+.error-msg {
+  color: #f87171;
+  font-size: 0.82rem;
+  margin-bottom: 12px;
+  display: none;
+}
+
+/* ── BOUTONS ── */
+.btn {
+  padding: 11px 18px;
+  border: none;
+  border-radius: 8px;
+  font-size: 0.9rem;
+  font-weight: 700;
+  cursor: pointer;
+  transition: opacity 0.2s, transform 0.1s;
+}
+.btn:hover { opacity: 0.88; }
+.btn:active { transform: scale(0.98); }
+
+.btn-full { width: 100%; padding: 14px; font-size: 1rem; }
+.btn-blue  { background: #3b82f6; color: white; }
+.btn-green { background: #10b981; color: white; }
+.btn-red   { background: #ef4444; color: white; }
+.btn-gray  { background: #475569; color: white; }
+
+/* ── TOPBAR ── */
+.topbar {
+  background: #1e293b;
+  padding: 16px 32px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  border-bottom: 1px solid #334155;
+  position: sticky;
+  top: 0;
+  z-index: 10;
+}
+
+.topbar h1 {
+  font-size: 1.1rem;
+  font-weight: 800;
+  color: #f1f5f9;
+  letter-spacing: -0.02em;
+}
+
+.topbar-user {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  font-size: 0.82rem;
+  color: #64748b;
+}
+
+/* ── CONTENU ── */
 .container {
   max-width: 1100px;
-  margin: auto;
-  padding: 20px;
+  margin: 0 auto;
+  padding: 32px 24px;
 }
 
-.card {
+/* ── STATS ── */
+.stats-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(170px, 1fr));
+  gap: 16px;
+  margin-bottom: 32px;
+}
+
+.stat-card {
   background: #1e293b;
-  padding: 20px;
-  border-radius: 10px;
-  margin-bottom: 20px;
+  border: 1px solid #334155;
+  border-radius: 12px;
+  padding: 22px;
+  text-align: center;
 }
 
-input {
-  padding: 10px;
-  border-radius: 6px;
-  border: none;
-  margin-right: 10px;
+.stat-num {
+  font-size: 2.4rem;
+  font-weight: 900;
+  color: #3b82f6;
+  line-height: 1;
 }
 
-button {
-  padding: 10px 14px;
-  border: none;
-  border-radius: 6px;
-  cursor: pointer;
+.stat-label {
+  font-size: 0.78rem;
+  color: #64748b;
+  margin-top: 6px;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
 }
 
-.btn { background: #3b82f6; color: white; }
-.btn-red { background: #ef4444; }
+/* ── CREATE EVENT ── */
+.create-card {
+  background: #1e293b;
+  border: 1px solid #334155;
+  border-radius: 12px;
+  padding: 24px;
+  margin-bottom: 24px;
+}
 
-.event {
+.create-card h3 {
+  font-size: 1rem;
+  color: #f1f5f9;
+  margin-bottom: 16px;
+}
+
+.input-row {
   display: flex;
-  justify-content: space-between;
-  align-items: center;
+  gap: 10px;
   flex-wrap: wrap;
 }
 
-.qr {
+.text-input {
+  flex: 1;
+  min-width: 200px;
+  padding: 12px 16px;
+  border-radius: 8px;
+  border: 2px solid #334155;
+  background: #0f172a;
+  color: white;
+  font-size: 0.95rem;
+  outline: none;
+  transition: border-color 0.2s;
+}
+
+.text-input:focus { border-color: #3b82f6; }
+
+/* ── EVENTS ── */
+.section-title {
+  font-size: 0.8rem;
+  color: #64748b;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  font-weight: 700;
+  margin-bottom: 12px;
+}
+
+.event-grid { display: grid; gap: 14px; }
+
+.event-card {
+  background: #1e293b;
+  border: 1px solid #334155;
+  border-radius: 12px;
+  padding: 20px;
+  display: flex;
+  align-items: center;
+  gap: 20px;
+  flex-wrap: wrap;
+  transition: border-color 0.2s;
+}
+
+.event-card:hover { border-color: #475569; }
+
+.event-info { flex: 1; min-width: 180px; }
+
+.event-name {
+  font-size: 1.05rem;
+  font-weight: 700;
+  color: #f1f5f9;
+  margin-bottom: 4px;
+}
+
+.event-url {
+  font-size: 0.75rem;
+  color: #475569;
+  word-break: break-all;
+  margin-bottom: 6px;
+}
+
+.event-meta {
+  font-size: 0.8rem;
+  color: #10b981;
+  font-weight: 600;
+}
+
+.qr-box {
   background: white;
-  padding: 10px;
+  padding: 8px;
+  border-radius: 8px;
+  flex-shrink: 0;
+}
+
+.event-actions {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+/* ── LOADING ── */
+.loader {
+  text-align: center;
+  padding: 40px;
+  color: #475569;
+  font-size: 0.9rem;
+}
+
+/* ── TOAST ── */
+.toast {
+  position: fixed;
+  bottom: 24px;
+  right: 24px;
+  background: #10b981;
+  color: white;
+  padding: 12px 20px;
+  border-radius: 10px;
+  font-size: 0.9rem;
+  font-weight: 600;
+  opacity: 0;
+  transform: translateY(10px);
+  transition: all 0.3s;
+  z-index: 999;
+  pointer-events: none;
+}
+
+.toast.show {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* ── RESPONSIVE ── */
+@media(max-width: 600px) {
+  .topbar { padding: 12px 16px; }
+  .container { padding: 16px; }
+  .event-card { flex-direction: column; align-items: flex-start; }
+  .event-actions { flex-direction: row; }
 }
 </style>
 </head>
-
 <body>
 
-<div class="container">
+<!-- ═══════════════════════════════════════
+     LOGIN SCREEN
+════════════════════════════════════════ -->
+<div id="loginScreen">
+  <div class="login-card">
+    <h2>🔐 ReSpoP Admin</h2>
+    <p>Accès réservé aux administrateurs</p>
 
-<!-- LOGIN -->
-<div id="loginCard" class="card">
-  <h2>Login Admin</h2>
-  <input id="email" placeholder="Email">
-  <input id="password" type="password" placeholder="Password">
-  <button class="btn" onclick="login()">Connexion</button>
+    <div class="field">
+      <label>Email</label>
+      <input type="email" id="emailInput" placeholder="admin@respop.fr" autocomplete="email">
+    </div>
+
+    <div class="field">
+      <label>Mot de passe</label>
+      <input type="password" id="passwordInput" placeholder="••••••••" autocomplete="current-password">
+    </div>
+
+    <div class="error-msg" id="loginError"></div>
+
+    <button class="btn btn-blue btn-full" id="loginBtn">
+      Connexion
+    </button>
+  </div>
 </div>
 
-<!-- APP -->
-<div id="app" class="hidden">
+<!-- ═══════════════════════════════════════
+     MAIN APP
+════════════════════════════════════════ -->
+<div id="mainApp" class="hidden">
 
-  <div class="card">
-    <h2>Dashboard</h2>
-    <p>Total réponses : <b id="total">0</b></p>
-    <p>Aujourd’hui : <b id="today">0</b></p>
+  <!-- Topbar -->
+  <div class="topbar">
+    <h1>🗂 ReSpoP · Admin</h1>
+    <div class="topbar-user">
+      <span id="userEmail">–</span>
+      <button class="btn btn-gray" id="logoutBtn">Déconnexion</button>
+    </div>
   </div>
 
-  <div class="card">
-    <h3>Créer un événement</h3>
-    <input id="eventName" placeholder="Nom event">
-    <button class="btn" onclick="createEvent()">Créer</button>
+  <div class="container">
+
+    <!-- Stats -->
+    <div class="stats-grid">
+      <div class="stat-card">
+        <div class="stat-num" id="statTotal">–</div>
+        <div class="stat-label">Réponses totales</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-num" id="statToday">–</div>
+        <div class="stat-label">Aujourd'hui</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-num" id="statEvents">–</div>
+        <div class="stat-label">Événements</div>
+      </div>
+    </div>
+
+    <!-- Create event -->
+    <div class="create-card">
+      <h3>➕ Créer un événement</h3>
+      <div class="input-row">
+        <input
+          class="text-input"
+          id="eventNameInput"
+          placeholder="Nom de l'événement (ex: Forum BTP 2026)"
+          maxlength="80"
+        >
+        <button class="btn btn-green" id="createEventBtn">Créer</button>
+      </div>
+    </div>
+
+    <!-- Events list -->
+    <div class="section-title">Événements</div>
+    <div id="eventList" class="event-grid">
+      <div class="loader">Chargement…</div>
+    </div>
+
   </div>
-
-  <div id="events"></div>
-
 </div>
 
-</div>
+<!-- Toast -->
+<div class="toast" id="toast"></div>
 
+<!-- ═══════════════════════════════════════
+     JAVASCRIPT
+════════════════════════════════════════ -->
 <script>
+// ─── CONFIG ───────────────────────────────────────────────
 const SUPABASE_URL = "https://xrtmlddmoepmomvtjgok.supabase.co";
 const SUPABASE_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InhydG1sZGRtb2VwbW9tdnRqZ29rIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODA3NTE2NTEsImV4cCI6MjA5NjMyNzY1MX0.NL1O4kB1GRcEN_Ss4eVRfb3f_j7MbKFiWcScS4FMD5o";
 
-const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+const sb = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
 
-// ================= AUTH =================
-async function login() {
-  const email = document.getElementById("email").value;
-  const password = document.getElementById("password").value;
-
-  const { error } = await supabase.auth.signInWithPassword({
-    email, password
-  });
-
-  if (error) return alert(error.message);
-
-  initApp();
+// ─── UTILS ────────────────────────────────────────────────
+function showToast(msg, color = "#10b981") {
+  const t = document.getElementById("toast");
+  t.textContent = msg;
+  t.style.background = color;
+  t.classList.add("show");
+  setTimeout(() => t.classList.remove("show"), 3000);
 }
 
-async function initApp() {
-  document.getElementById("loginCard").classList.add("hidden");
-  document.getElementById("app").classList.remove("hidden");
-
+function showApp(user) {
+  document.getElementById("loginScreen").classList.add("hidden");
+  document.getElementById("mainApp").classList.remove("hidden");
+  document.getElementById("userEmail").textContent = user.email;
   loadStats();
   loadEvents();
 }
 
-// ================= STATS =================
-async function loadStats() {
-  const { data } = await supabase.from("responses").select("*");
-
-  const todayDate = new Date().toISOString().slice(0,10);
-
-  const today = data.filter(r => r.created_at.startsWith(todayDate)).length;
-
-  document.getElementById("total").innerText = data.length;
-  document.getElementById("today").innerText = today;
+function showLogin() {
+  document.getElementById("mainApp").classList.add("hidden");
+  document.getElementById("loginScreen").classList.remove("hidden");
 }
 
-// ================= EVENTS =================
-async function loadEvents() {
-  const { data } = await supabase.from("events").select("*");
+// ─── AUTH ─────────────────────────────────────────────────
+document.getElementById("loginBtn").addEventListener("click", async () => {
+  const email    = document.getElementById("emailInput").value.trim();
+  const password = document.getElementById("passwordInput").value;
+  const errEl    = document.getElementById("loginError");
 
-  const container = document.getElementById("events");
+  errEl.style.display = "none";
+
+  if (!email || !password) {
+    errEl.textContent = "Remplis tous les champs.";
+    errEl.style.display = "block";
+    return;
+  }
+
+  document.getElementById("loginBtn").textContent = "Connexion…";
+
+  const { data, error } = await sb.auth.signInWithPassword({ email, password });
+
+  document.getElementById("loginBtn").textContent = "Connexion";
+
+  if (error) {
+    errEl.textContent = error.message;
+    errEl.style.display = "block";
+    return;
+  }
+
+  showApp(data.user);
+});
+
+// Entrée clavier → login
+document.getElementById("passwordInput").addEventListener("keydown", e => {
+  if (e.key === "Enter") document.getElementById("loginBtn").click();
+});
+
+// Logout
+document.getElementById("logoutBtn").addEventListener("click", async () => {
+  await sb.auth.signOut();
+  showLogin();
+  showToast("Déconnecté", "#475569");
+});
+
+// Session persistante
+sb.auth.getSession().then(({ data }) => {
+  if (data.session) showApp(data.session.user);
+});
+
+// ─── STATS ────────────────────────────────────────────────
+async function loadStats() {
+  const [{ count: total }, { data: events }, { data: todayData }] = await Promise.all([
+    sb.from("responses").select("*", { count: "exact", head: true }),
+    sb.from("events").select("id"),
+    sb.from("responses")
+      .select("id")
+      .gte("created_at", new Date().toISOString().slice(0, 10))
+  ]);
+
+  document.getElementById("statTotal").textContent  = total ?? 0;
+  document.getElementById("statEvents").textContent = events?.length ?? 0;
+  document.getElementById("statToday").textContent  = todayData?.length ?? 0;
+}
+
+// ─── LOAD EVENTS ──────────────────────────────────────────
+async function loadEvents() {
+  const container = document.getElementById("eventList");
+  container.innerHTML = `<div class="loader">Chargement…</div>`;
+
+  const { data: events, error } = await sb
+    .from("events")
+    .select("*, responses(count)")
+    .order("created_at", { ascending: false });
+
+  if (error || !events) {
+    container.innerHTML = `<div class="loader">Erreur de chargement.</div>`;
+    return;
+  }
+
+  if (events.length === 0) {
+    container.innerHTML = `<div class="loader">Aucun événement. Crée-en un !</div>`;
+    return;
+  }
+
   container.innerHTML = "";
 
-  data.forEach(event => {
+  events.forEach(event => {
+    const url         = `${location.origin}/form.html?event=${event.id}`;
+    const respCount   = event.responses?.[0]?.count ?? 0;
+    const createdDate = new Date(event.created_at).toLocaleDateString("fr-FR");
 
-    const url = `${location.origin}/form.html?event=${event.id}`;
+    const card = document.createElement("div");
+    card.className = "event-card";
+    card.id = `card-${event.id}`;
 
-    const div = document.createElement("div");
-    div.className = "card event";
-
-    div.innerHTML = `
-      <div>
-        <b>${event.name}</b><br>
-        <small>${url}</small>
+    card.innerHTML = `
+      <div class="event-info">
+        <div class="event-name">${escapeHtml(event.name)}</div>
+        <div class="event-url">${url}</div>
+        <div class="event-meta">
+          ${respCount} réponse${respCount > 1 ? "s" : ""} · créé le ${createdDate}
+        </div>
       </div>
 
-      <div class="qr" id="qr-${event.id}"></div>
+      <div class="qr-box" id="qr-${event.id}"></div>
 
-      <button class="btn-red" onclick="deleteEvent('${event.id}')">Supprimer</button>
+      <div class="event-actions">
+        <button class="btn btn-gray btn-copy" data-url="${url}">📋 Copier lien</button>
+        <button class="btn btn-red btn-delete" data-id="${event.id}">🗑 Supprimer</button>
+      </div>
     `;
 
-    container.appendChild(div);
+    container.appendChild(card);
 
+    // QR Code
     new QRCode(document.getElementById(`qr-${event.id}`), {
       text: url,
-      width: 80,
-      height: 80
+      width: 90,
+      height: 90,
+      correctLevel: QRCode.CorrectLevel.H
+    });
+
+    // Copy button
+    card.querySelector(".btn-copy").addEventListener("click", () => {
+      navigator.clipboard.writeText(url);
+      showToast("Lien copié !");
+    });
+
+    // Delete button
+    card.querySelector(".btn-delete").addEventListener("click", () => {
+      deleteEvent(event.id, event.name);
     });
   });
 }
 
-// ================= CREATE =================
-async function createEvent() {
-  const name = document.getElementById("eventName").value;
+// ─── CREATE EVENT ─────────────────────────────────────────
+document.getElementById("createEventBtn").addEventListener("click", async () => {
+  const input = document.getElementById("eventNameInput");
+  const name  = input.value.trim();
 
-  await supabase.from("events").insert([{ name }]);
+  if (!name) {
+    showToast("Donne un nom à l'événement", "#f59e0b");
+    input.focus();
+    return;
+  }
 
+  document.getElementById("createEventBtn").textContent = "Création…";
+
+  const { error } = await sb.from("events").insert([{ name }]);
+
+  document.getElementById("createEventBtn").textContent = "Créer";
+
+  if (error) {
+    showToast("Erreur : " + error.message, "#ef4444");
+    return;
+  }
+
+  input.value = "";
+  showToast("Événement créé ✅");
+  loadStats();
   loadEvents();
-}
-
-// ================= DELETE =================
-async function deleteEvent(id) {
-  await supabase.from("events").delete().eq("id", id);
-  loadEvents();
-}
-
-// ================= SESSION =================
-supabase.auth.getSession().then(({ data }) => {
-  if (data.session) initApp();
 });
+
+// Entrée clavier → créer
+document.getElementById("eventNameInput").addEventListener("keydown", e => {
+  if (e.key === "Enter") document.getElementById("createEventBtn").click();
+});
+
+// ─── DELETE EVENT ─────────────────────────────────────────
+async function deleteEvent(id, name) {
+  if (!confirm(`Supprimer "${name}" et toutes ses réponses ?`)) return;
+
+  const { error } = await sb.from("events").delete().eq("id", id);
+
+  if (error) {
+    showToast("Erreur suppression", "#ef4444");
+    return;
+  }
+
+  showToast("Événement supprimé", "#ef4444");
+  loadStats();
+  loadEvents();
+}
+
+// ─── SÉCURITÉ ─────────────────────────────────────────────
+function escapeHtml(str) {
+  return str
+    .replace(/&/g, "&")
+    .replace(/</g, "<")
+    .replace(/>/g, ">")
+    .replace(/"/g, """);
+}
 </script>
 
 </body>
