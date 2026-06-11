@@ -1,57 +1,195 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Admin – ReSpoP</title>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="https://cdn.jsdelivr.net/npm/qrcodejs@1.0.0/qrcode.min.js"></script>
+
+<style>
+body {
+  font-family: Arial;
+  background: #0f172a;
+  color: white;
+  margin: 0;
+}
+
+.hidden { display: none; }
+
+.container {
+  max-width: 1100px;
+  margin: auto;
+  padding: 20px;
+}
+
+.card {
+  background: #1e293b;
+  padding: 20px;
+  border-radius: 10px;
+  margin-bottom: 20px;
+}
+
+input {
+  padding: 10px;
+  border-radius: 6px;
+  border: none;
+  margin-right: 10px;
+}
+
+button {
+  padding: 10px 14px;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+}
+
+.btn { background: #3b82f6; color: white; }
+.btn-red { background: #ef4444; }
+
+.event {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+}
+
+.qr {
+  background: white;
+  padding: 10px;
+}
+</style>
+</head>
+
 <body>
 
-<!-- AUTH -->
-<div id="authScreen">
-  <div class="auth-card">
-    <h1>🔐 Admin Questionnaire ReSpoP</h1>
-    <p>Accès réservé aux administrateurs</p>
-    <input type="password" class="auth-input" id="passwordInput" placeholder="Mot de passe">
-    <button class="auth-btn" id="authBtn">Accéder</button>
-    <div class="auth-error" id="authError">Mot de passe incorrect</div>
-  </div>
+<div class="container">
+
+<!-- LOGIN -->
+<div id="loginCard" class="card">
+  <h2>Login Admin</h2>
+  <input id="email" placeholder="Email">
+  <input id="password" type="password" placeholder="Password">
+  <button class="btn" onclick="login()">Connexion</button>
 </div>
 
 <!-- APP -->
-<div id="mainApp" style="display:none;">
+<div id="app" class="hidden">
 
-  <div class="topbar">
-    <h1>Dashboard ReSpoP</h1>
+  <div class="card">
+    <h2>Dashboard</h2>
+    <p>Total réponses : <b id="total">0</b></p>
+    <p>Aujourd’hui : <b id="today">0</b></p>
   </div>
 
-  <div class="content">
-
-    <!-- Stats -->
-    <div class="stats-grid">
-      <div class="stat-card">
-        <div class="stat-num" id="statTotal">–</div>
-        <div class="stat-label">Réponses totales</div>
-      </div>
-      <div class="stat-card">
-        <div class="stat-num" id="statToday">–</div>
-        <div class="stat-label">Aujourd'hui</div>
-      </div>
-      <div class="stat-card">
-        <div class="stat-num" id="statEvents">–</div>
-        <div class="stat-label">Événements actifs</div>
-      </div>
-    </div>
-
+  <div class="card">
+    <h3>Créer un événement</h3>
+    <input id="eventName" placeholder="Nom event">
+    <button class="btn" onclick="createEvent()">Créer</button>
   </div>
+
+  <div id="events"></div>
+
+</div>
+
 </div>
 
 <script>
-const PASSWORD = "admin123"; // change ça
+const SUPABASE_URL = "https://xrtmlddmoepmomvtjgok.supabase.co";
+const SUPABASE_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InhydG1sZGRtb2VwbW9tdnRqZ29rIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODA3NTE2NTEsImV4cCI6MjA5NjMyNzY1MX0.NL1O4kB1GRcEN_Ss4eVRfb3f_j7MbKFiWcScS4FMD5o";
 
-document.getElementById("authBtn").onclick = () => {
-  const input = document.getElementById("passwordInput").value;
+const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
 
-  if (input === PASSWORD) {
-    document.getElementById("authScreen").style.display = "none";
-    document.getElementById("mainApp").style.display = "block";
-  } else {
-    document.getElementById("authError").style.display = "block";
-  }
-};
+// ================= AUTH =================
+async function login() {
+  const email = document.getElementById("email").value;
+  const password = document.getElementById("password").value;
+
+  const { error } = await supabase.auth.signInWithPassword({
+    email, password
+  });
+
+  if (error) return alert(error.message);
+
+  initApp();
+}
+
+async function initApp() {
+  document.getElementById("loginCard").classList.add("hidden");
+  document.getElementById("app").classList.remove("hidden");
+
+  loadStats();
+  loadEvents();
+}
+
+// ================= STATS =================
+async function loadStats() {
+  const { data } = await supabase.from("responses").select("*");
+
+  const todayDate = new Date().toISOString().slice(0,10);
+
+  const today = data.filter(r => r.created_at.startsWith(todayDate)).length;
+
+  document.getElementById("total").innerText = data.length;
+  document.getElementById("today").innerText = today;
+}
+
+// ================= EVENTS =================
+async function loadEvents() {
+  const { data } = await supabase.from("events").select("*");
+
+  const container = document.getElementById("events");
+  container.innerHTML = "";
+
+  data.forEach(event => {
+
+    const url = `${location.origin}/form.html?event=${event.id}`;
+
+    const div = document.createElement("div");
+    div.className = "card event";
+
+    div.innerHTML = `
+      <div>
+        <b>${event.name}</b><br>
+        <small>${url}</small>
+      </div>
+
+      <div class="qr" id="qr-${event.id}"></div>
+
+      <button class="btn-red" onclick="deleteEvent('${event.id}')">Supprimer</button>
+    `;
+
+    container.appendChild(div);
+
+    new QRCode(document.getElementById(`qr-${event.id}`), {
+      text: url,
+      width: 80,
+      height: 80
+    });
+  });
+}
+
+// ================= CREATE =================
+async function createEvent() {
+  const name = document.getElementById("eventName").value;
+
+  await supabase.from("events").insert([{ name }]);
+
+  loadEvents();
+}
+
+// ================= DELETE =================
+async function deleteEvent(id) {
+  await supabase.from("events").delete().eq("id", id);
+  loadEvents();
+}
+
+// ================= SESSION =================
+supabase.auth.getSession().then(({ data }) => {
+  if (data.session) initApp();
+});
 </script>
 
 </body>
+</html>
