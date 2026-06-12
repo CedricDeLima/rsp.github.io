@@ -530,7 +530,8 @@ async function submitForm() {
     trait_hypertenseur: state.hta,
     glycemie: state.glyc,
     antécédents: anteMap[getRadio('antecedents')],
-    event: eventName || 'direct'
+  event_id: eventId || null,   // UUID récupéré depuis l'URL
+  event: eventName || 'direct'
   };
 
   const { error } = await db.from('FindRISC_Form_Responses').insert([payload]);
