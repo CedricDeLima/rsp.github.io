@@ -4,301 +4,120 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Admin – ReSpoP</title>
-
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script src="https://cdn.jsdelivr.net/npm/qrcodejs@1.0.0/qrcode.min.js"></script>
-
 <style>
 * { box-sizing: border-box; margin: 0; padding: 0; }
-
-body {
-  font-family: 'Segoe UI', sans-serif;
-  background: #0f172a;
-  color: #e2e8f0;
-  min-height: 100vh;
-}
-
+body { font-family: 'Segoe UI', sans-serif; background: #0f172a; color: #e2e8f0; min-height: 100vh; }
 .hidden { display: none !important; }
 
-/* ── LOGIN ── */
-#loginScreen {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  min-height: 100vh;
-}
-
-.login-card {
-  background: #1e293b;
-  border-radius: 16px;
-  padding: 40px;
-  width: 380px;
-  box-shadow: 0 8px 32px rgba(0,0,0,0.5);
-}
-
-.login-card h2 {
-  font-size: 1.4rem;
-  margin-bottom: 6px;
-  color: #f1f5f9;
-}
-
-.login-card p {
-  color: #64748b;
-  font-size: 0.85rem;
-  margin-bottom: 28px;
-}
-
-.field {
-  display: flex;
-  flex-direction: column;
-  gap: 6px;
-  margin-bottom: 16px;
-}
-
-.field label {
-  font-size: 0.82rem;
-  color: #94a3b8;
-  font-weight: 600;
-  text-transform: uppercase;
-  letter-spacing: 0.05em;
-}
-
-.field input {
-  padding: 12px 14px;
-  border-radius: 8px;
-  border: 2px solid #334155;
-  background: #0f172a;
-  color: white;
-  font-size: 0.95rem;
-  outline: none;
-  transition: border-color 0.2s;
-}
-
+/* LOGIN */
+#loginScreen { display: flex; align-items: center; justify-content: center; min-height: 100vh; }
+.login-card { background: #1e293b; border-radius: 16px; padding: 40px; width: 380px; box-shadow: 0 8px 32px rgba(0,0,0,0.5); }
+.login-card h2 { font-size: 1.4rem; margin-bottom: 6px; color: #f1f5f9; }
+.login-card p { color: #64748b; font-size: 0.85rem; margin-bottom: 28px; }
+.field { display: flex; flex-direction: column; gap: 6px; margin-bottom: 16px; }
+.field label { font-size: 0.82rem; color: #94a3b8; font-weight: 600; text-transform: uppercase; letter-spacing: 0.05em; }
+.field input { padding: 12px 14px; border-radius: 8px; border: 2px solid #334155; background: #0f172a; color: white; font-size: 0.95rem; outline: none; transition: border-color 0.2s; }
 .field input:focus { border-color: #3b82f6; }
+.error-msg { color: #f87171; font-size: 0.82rem; margin-bottom: 12px; display: none; }
 
-.error-msg {
-  color: #f87171;
-  font-size: 0.82rem;
-  margin-bottom: 12px;
-  display: none;
-}
-
-/* ── BOUTONS ── */
-.btn {
-  padding: 11px 18px;
-  border: none;
-  border-radius: 8px;
-  font-size: 0.9rem;
-  font-weight: 700;
-  cursor: pointer;
-  transition: opacity 0.2s, transform 0.1s;
-}
+/* BUTTONS */
+.btn { padding: 11px 18px; border: none; border-radius: 8px; font-size: 0.9rem; font-weight: 700; cursor: pointer; transition: opacity 0.2s, transform 0.1s; }
 .btn:hover { opacity: 0.88; }
 .btn:active { transform: scale(0.98); }
-
+.btn-full { width: 100%; padding: 14px; font-size: 1rem; }
 .btn-blue  { background: #3b82f6; color: white; }
 .btn-green { background: #10b981; color: white; }
 .btn-red   { background: #ef4444; color: white; }
 .btn-gray  { background: #475569; color: white; }
+.btn-purple { background: #8b5cf6; color: white; }
+.btn-sm { padding: 7px 12px; font-size: 0.8rem; }
 
-/* ── TOPBAR ── */
-.topbar {
-  background: #1e293b;
-  padding: 16px 32px;
+/* TOPBAR */
+.topbar { background: #1e293b; padding: 16px 32px; display: flex; align-items: center; justify-content: space-between; border-bottom: 1px solid #334155; position: sticky; top: 0; z-index: 10; }
+.topbar h1 { font-size: 1.1rem; font-weight: 800; color: #f1f5f9; }
+.topbar-user { display: flex; align-items: center; gap: 12px; font-size: 0.82rem; color: #64748b; }
+
+/* CONTAINER */
+.container { max-width: 1100px; margin: 0 auto; padding: 32px 24px; }
+
+/* STATS */
+.stats-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(170px, 1fr)); gap: 16px; margin-bottom: 32px; }
+.stat-card { background: #1e293b; border: 1px solid #334155; border-radius: 12px; padding: 22px; text-align: center; }
+.stat-num { font-size: 2.4rem; font-weight: 900; color: #3b82f6; line-height: 1; }
+.stat-label { font-size: 0.78rem; color: #64748b; margin-top: 6px; text-transform: uppercase; letter-spacing: 0.05em; }
+
+/* CREATE */
+.create-card { background: #1e293b; border: 1px solid #334155; border-radius: 12px; padding: 24px; margin-bottom: 24px; }
+.create-card h3 { font-size: 1rem; color: #f1f5f9; margin-bottom: 16px; }
+.input-row { display: flex; gap: 10px; flex-wrap: wrap; }
+.text-input { flex: 1; min-width: 200px; padding: 12px 16px; border-radius: 8px; border: 2px solid #334155; background: #0f172a; color: white; font-size: 0.95rem; outline: none; transition: border-color 0.2s; }
+.text-input:focus { border-color: #3b82f6; }
+
+/* EVENTS */
+.section-title { font-size: 0.8rem; color: #64748b; text-transform: uppercase; letter-spacing: 0.08em; font-weight: 700; margin-bottom: 12px; }
+.event-grid { display: grid; gap: 14px; }
+.event-card { background: #1e293b; border: 1px solid #334155; border-radius: 12px; padding: 20px; display: flex; align-items: center; gap: 20px; flex-wrap: wrap; transition: border-color 0.2s; }
+.event-card:hover { border-color: #475569; }
+.event-info { flex: 1; min-width: 180px; }
+.event-name { font-size: 1.05rem; font-weight: 700; color: #f1f5f9; margin-bottom: 4px; }
+.event-url { font-size: 0.72rem; color: #475569; word-break: break-all; margin-bottom: 6px; }
+.event-meta { font-size: 0.8rem; color: #10b981; font-weight: 600; }
+.qr-box { background: white; padding: 8px; border-radius: 8px; flex-shrink: 0; }
+.event-actions { display: flex; flex-direction: column; gap: 8px; }
+
+/* RESPONSES PANEL */
+.responses-panel {
+  background: #0f172a;
+  border: 1px solid #1e3a5f;
+  border-radius: 10px;
+  padding: 20px;
+  margin-top: 12px;
+  width: 100%;
+}
+.responses-panel-header {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  border-bottom: 1px solid #334155;
-  position: sticky;
-  top: 0;
-  z-index: 10;
-}
-
-.topbar h1 {
-  font-size: 1.1rem;
-  font-weight: 800;
-  color: #f1f5f9;
-  letter-spacing: -0.02em;
-}
-
-.topbar-user {
-  display: flex;
-  align-items: center;
-  gap: 12px;
-  font-size: 0.82rem;
-  color: #64748b;
-}
-
-/* ── CONTENU ── */
-.container {
-  max-width: 1100px;
-  margin: 0 auto;
-  padding: 32px 24px;
-}
-
-/* ── STATS ── */
-.stats-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
-  gap: 16px;
-  margin-bottom: 32px;
-}
-
-.stat-card {
-  background: #1e293b;
-  border: 1px solid #334155;
-  border-radius: 12px;
-  padding: 22px;
-  text-align: center;
-}
-
-.stat-num {
-  font-size: 2.4rem;
-  font-weight: 900;
-  color: #3b82f6;
-  line-height: 1;
-}
-
-.stat-label {
-  font-size: 0.78rem;
-  color: #64748b;
-  margin-top: 6px;
-  text-transform: uppercase;
-  letter-spacing: 0.05em;
-}
-
-/* ── CREATE EVENT ── */
-.create-card {
-  background: #1e293b;
-  border: 1px solid #334155;
-  border-radius: 12px;
-  padding: 24px;
-  margin-bottom: 24px;
-}
-
-.create-card h3 {
-  font-size: 1rem;
-  color: #f1f5f9;
   margin-bottom: 16px;
-}
-
-.input-row {
-  display: flex;
+  flex-wrap: wrap;
   gap: 10px;
-  flex-wrap: wrap;
 }
+.responses-panel-header h4 { font-size: 0.95rem; color: #93c5fd; font-weight: 700; }
+.panel-actions { display: flex; gap: 8px; flex-wrap: wrap; }
 
-.text-input {
-  flex: 1;
-  min-width: 200px;
-  padding: 12px 16px;
-  border-radius: 8px;
-  border: 2px solid #334155;
-  background: #0f172a;
-  color: white;
-  font-size: 0.95rem;
-  outline: none;
-  transition: border-color 0.2s;
-}
+/* TABLE */
+.table-wrap { overflow-x: auto; }
+table { width: 100%; border-collapse: collapse; font-size: 0.8rem; }
+th { background: #1e293b; padding: 10px 12px; text-align: left; color: #94a3b8; font-weight: 600; font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.04em; border-bottom: 2px solid #334155; white-space: nowrap; }
+td { padding: 10px 12px; border-bottom: 1px solid #1a2744; color: #cbd5e1; vertical-align: middle; }
+tr:hover td { background: #1e293b44; }
+.badge { display: inline-block; padding: 2px 8px; border-radius: 10px; font-size: 0.72rem; font-weight: 700; }
+.badge-green { background: #064e3b; color: #6ee7b7; }
+.badge-red   { background: #450a0a; color: #fca5a5; }
+.badge-blue  { background: #1e3a8a; color: #93c5fd; }
+.badge-yellow { background: #451a03; color: #fcd34d; }
+.badge-purple { background: #3b0764; color: #d8b4fe; }
+.no-data { text-align: center; padding: 30px; color: #475569; font-size: 0.85rem; }
 
-.text-input:focus { border-color: #3b82f6; }
+/* RISK SCORE */
+.score-pill { display: inline-block; padding: 3px 10px; border-radius: 20px; font-size: 0.75rem; font-weight: 800; }
+.score-low    { background: #d1fae5; color: #065f46; }
+.score-slight { background: #dbeafe; color: #1e3a8a; }
+.score-mod    { background: #fef3c7; color: #92400e; }
+.score-high   { background: #fee2e2; color: #991b1b; }
+.score-vhigh  { background: #fce7f3; color: #831843; }
 
-/* ── EVENTS ── */
-.section-title {
-  font-size: 0.8rem;
-  color: #64748b;
-  text-transform: uppercase;
-  letter-spacing: 0.08em;
-  font-weight: 700;
-  margin-bottom: 12px;
-}
+/* LOADER / TOAST */
+.loader { text-align: center; padding: 40px; color: #475569; font-size: 0.9rem; }
+.toast { position: fixed; bottom: 24px; right: 24px; background: #10b981; color: white; padding: 12px 20px; border-radius: 10px; font-size: 0.9rem; font-weight: 600; opacity: 0; transform: translateY(10px); transition: all 0.3s; z-index: 999; pointer-events: none; }
+.toast.show { opacity: 1; transform: translateY(0); }
 
-.event-grid { display: grid; gap: 14px; }
-
-.event-card {
-  background: #1e293b;
-  border: 1px solid #334155;
-  border-radius: 12px;
-  padding: 20px;
-  display: flex;
-  align-items: center;
-  gap: 20px;
-  flex-wrap: wrap;
-  transition: border-color 0.2s;
-}
-
-.event-card:hover { border-color: #475569; }
-
-.event-info { flex: 1; min-width: 180px; }
-
-.event-name {
-  font-size: 1.05rem;
-  font-weight: 700;
-  color: #f1f5f9;
-  margin-bottom: 4px;
-}
-
-.event-url {
-  font-size: 0.75rem;
-  color: #475569;
-  word-break: break-all;
-  margin-bottom: 6px;
-}
-
-.event-meta {
-  font-size: 0.8rem;
-  color: #10b981;
-  font-weight: 600;
-}
-
-.qr-box {
-  background: white;
-  padding: 8px;
-  border-radius: 8px;
-  flex-shrink: 0;
-}
-
-.event-actions {
-  display: flex;
-  flex-direction: column;
-  gap: 8px;
-}
-
-/* ── LOADING ── */
-.loader {
-  text-align: center;
-  padding: 40px;
-  color: #475569;
-  font-size: 0.9rem;
-}
-
-/* ── TOAST ── */
-.toast {
-  position: fixed;
-  bottom: 24px;
-  right: 24px;
-  background: #10b981;
-  color: white;
-  padding: 12px 20px;
-  border-radius: 10px;
-  font-size: 0.9rem;
-  font-weight: 600;
-  opacity: 0;
-  transform: translateY(10px);
-  transition: all 0.3s;
-  z-index: 999;
-  pointer-events: none;
-}
-
-.toast.show {
-  opacity: 1;
-  transform: translateY(0);
-}
-
-/* ── RESPONSIVE ── */
-@media(max-width: 600px) {
+@media(max-width:600px) {
   .topbar { padding: 12px 16px; }
   .container { padding: 16px; }
+  .event-card { flex-direction: column; align-items: flex-start; }
   .event-actions { flex-direction: row; }
   .login-card { width: 90%; padding: 24px; }
 }
@@ -306,42 +125,35 @@ body {
 </head>
 <body>
 
-<!-- LOGIN SCREEN -->
+<!-- LOGIN -->
 <div id="loginScreen">
   <div class="login-card">
     <h2>🔐 ReSpoP Admin</h2>
     <p>Accès réservé aux administrateurs</p>
-
     <div class="field">
       <label>Email</label>
-      <input type="email" id="loginEmail" placeholder="admin@exemple.com">
+      <input type="email" id="loginEmail" placeholder="admin@respop.fr" autocomplete="email">
     </div>
-
     <div class="field">
       <label>Mot de passe</label>
-      <input type="password" id="loginPassword" placeholder="••••••••">
+      <input type="password" id="loginPassword" placeholder="••••••••" autocomplete="current-password">
     </div>
-
     <div class="error-msg" id="loginError"></div>
-
-    <button class="btn btn-blue" id="loginBtn" style="width: 100%;">Connexion</button>
+    <button class="btn btn-blue btn-full" id="loginBtn">Connexion</button>
   </div>
 </div>
 
 <!-- MAIN APP -->
 <div id="mainApp" class="hidden">
-
-  <!-- Topbar -->
   <div class="topbar">
     <h1>🗂 ReSpoP · Admin</h1>
     <div class="topbar-user">
       <span id="userEmail">–</span>
-      <button class="btn btn-gray" id="logoutBtn" style="padding: 6px 12px; font-size: 0.8rem;">Déconnexion</button>
+      <button class="btn btn-gray" id="logoutBtn" style="padding:6px 12px;font-size:0.8rem;">Déconnexion</button>
     </div>
   </div>
 
   <div class="container">
-
     <!-- Stats -->
     <div class="stats-grid">
       <div class="stat-card">
@@ -358,366 +170,442 @@ body {
       </div>
     </div>
 
-    <!-- Create event -->
+    <!-- Créer événement -->
     <div class="create-card">
       <h3>➕ Créer un événement</h3>
       <div class="input-row">
-        <input type="text" class="text-input" id="eventNameInput" placeholder="Nom de l'événement" maxlength="80">
+        <input class="text-input" id="eventNameInput" placeholder="Nom de l'événement (ex: Forum BTP 2026)" maxlength="80">
         <button class="btn btn-green" id="createEventBtn">Créer</button>
       </div>
     </div>
 
-    <!-- Events list -->
+    <!-- Liste événements -->
     <div class="section-title">Événements</div>
     <div id="eventList" class="event-grid">
       <div class="loader">Chargement…</div>
     </div>
-
   </div>
 </div>
 
-<!-- Toast -->
 <div class="toast" id="toast"></div>
 
-<!-- JAVASCRIPT -->
 <script>
-// ============================================
-// SUPABASE CONFIG - EXACT CREDENTIALS FROM INDEX.HTML
-// ============================================
-const SUPABASE_URL = 'https://xrtmlddmoepmomvtjgok.supabase.co';
-const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InhydG1sZGRtb2VwbW9tdnRqZ29rIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODA3NTE2NTEsImV4cCI6MjA5NjMyNzY1MX0.NL1O4kB1GRcEN_Ss4eVRfb3f_j7MbKFiWcScS4FMD5o';
+// ─── CONFIG ───────────────────────────────────────────────
+const SUPABASE_URL = "https://xrtmlddmoepmomvtjgok.supabase.co";
+const SUPABASE_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InhydG1sZGRtb2VwbW9tdnRqZ29rIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODA3NTE2NTEsImV4cCI6MjA5NjMyNzY1MX0.NL1O4kB1GRcEN_Ss4eVRfb3f_j7MbKFiWcScS4FMD5o";
+const sb = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
 
-// Initialize Supabase client at TOP LEVEL (not in a function)
-const { createClient } = supabase;
-const sb = createClient(SUPABASE_URL, SUPABASE_KEY);
-
-// ============================================
-// DOM ELEMENTS
-// ============================================
-const loginScreen = document.getElementById('loginScreen');
-const mainApp = document.getElementById('mainApp');
-const loginEmail = document.getElementById('loginEmail');
-const loginPassword = document.getElementById('loginPassword');
-const loginError = document.getElementById('loginError');
-const loginBtn = document.getElementById('loginBtn');
-const userEmail = document.getElementById('userEmail');
-const logoutBtn = document.getElementById('logoutBtn');
-const eventNameInput = document.getElementById('eventNameInput');
-const createEventBtn = document.getElementById('createEventBtn');
-const eventList = document.getElementById('eventList');
-const toast = document.getElementById('toast');
-
-// Stats elements
-const statTotal = document.getElementById('statTotal');
-const statToday = document.getElementById('statToday');
-const statEvents = document.getElementById('statEvents');
-
-// ============================================
-// TOAST NOTIFICATIONS
-// ============================================
-function showToast(msg, color = "#10b981") {
-  toast.textContent = msg;
-  toast.style.background = color;
-  toast.classList.add('show');
-  setTimeout(() => toast.classList.remove('show'), 3000);
-}
-
-// ============================================
-// ESCAPE HTML (XSS PROTECTION)
-// ============================================
-function escapeHtml(str) {
+// ─── UTILS ────────────────────────────────────────────────
+function esc(str) {
   if (!str) return '';
-  return String(str)
-    .replace(/&/g, '&amp;')
-    .replace(/</g, '&lt;')
-    .replace(/>/g, '&gt;')
-    .replace(/"/g, '&quot;')
-    .replace(/'/g, '&#039;');
+  return String(str).replace(/&/g,'&').replace(/</g,'<').replace(/>/g,'>').replace(/"/g,'"');
 }
 
-// ============================================
-// UI STATE MANAGEMENT
-// ============================================
-function showLoginScreen() {
-  loginScreen.classList.remove('hidden');
-  mainApp.classList.add('hidden');
+function showToast(msg, color = "#10b981") {
+  const t = document.getElementById("toast");
+  t.textContent = msg;
+  t.style.background = color;
+  t.classList.add("show");
+  setTimeout(() => t.classList.remove("show"), 3000);
 }
 
-function showMainApp(user) {
-  loginScreen.classList.add('hidden');
-  mainApp.classList.remove('hidden');
-  userEmail.textContent = user.email;
+function getRiskClass(score) {
+  if (score <= 6)  return 'score-low';
+  if (score <= 11) return 'score-slight';
+  if (score <= 14) return 'score-mod';
+  if (score <= 20) return 'score-high';
+  return 'score-vhigh';
+}
+
+function getRiskLabel(score) {
+  if (score <= 6)  return 'Faible';
+  if (score <= 11) return 'Légèrement élevé';
+  if (score <= 14) return 'Modéré';
+  if (score <= 20) return 'Élevé';
+  return 'Très élevé';
+}
+
+// Calcul score FINDRISC depuis les données stockées
+function computeScore(r) {
+  const ageMap  = {'<45':0,'45-54':2,'55-64':3,'≥65':4};
+  const imcMap  = {'<25':0,'25-30':1,'>30':3};
+  const anteMap = {'Aucun':0,'Famille éloignée':3,'Famille proche':5};
+  let s = 0;
+  s += ageMap[r.age]  ?? 0;
+  s += imcMap[r.IMC]  ?? 0;
+  // tour de taille non stocké séparément → ignoré dans le recalcul
+  if (!r.Act_physique)     s += 2;
+  if (!r.fruits_legumes)   s += 1;
+  if (r.trait_hypertenseur) s += 2;
+  if (r.glycemie)           s += 5;
+  s += anteMap[r['antécédents']] ?? 0;
+  return s;
+}
+
+// ─── AUTH ─────────────────────────────────────────────────
+function showApp(user) {
+  document.getElementById("loginScreen").classList.add("hidden");
+  document.getElementById("mainApp").classList.remove("hidden");
+  document.getElementById("userEmail").textContent = user.email;
   loadStats();
   loadEvents();
 }
 
-// ============================================
-// AUTH: Check session on page load
-// ============================================
-sb.auth.getSession().then(({ data, error }) => {
-  if (error) {
-    console.error('Session check error:', error);
-    return;
-  }
-  if (data.session) {
-    showMainApp(data.session.user);
-  }
+function showLogin() {
+  document.getElementById("mainApp").classList.add("hidden");
+  document.getElementById("loginScreen").classList.remove("hidden");
+}
+
+// Vérif session au chargement
+sb.auth.getSession().then(({ data }) => {
+  if (data.session) showApp(data.session.user);
 });
 
-// ============================================
-// AUTH: Listen for auth state changes
-// ============================================
 sb.auth.onAuthStateChange((event, session) => {
-  if (event === 'SIGNED_OUT') {
-    showLoginScreen();
-  } else if (event === 'SIGNED_IN' && session) {
-    showMainApp(session.user);
-  }
+  if (event === 'SIGNED_OUT') showLogin();
+  else if (event === 'SIGNED_IN' && session) showApp(session.user);
 });
 
-// ============================================
-// LOGIN HANDLER
-// ============================================
-loginBtn.addEventListener('click', async () => {
-  const email = loginEmail.value.trim();
-  const password = loginPassword.value;
+document.getElementById("loginBtn").addEventListener("click", async () => {
+  const email    = document.getElementById("loginEmail").value.trim();
+  const password = document.getElementById("loginPassword").value;
+  const errEl    = document.getElementById("loginError");
+  errEl.style.display = "none";
 
-  // Hide previous errors
-  loginError.style.display = 'none';
-
-  // Validation
   if (!email || !password) {
-    loginError.textContent = 'Remplis tous les champs.';
-    loginError.style.display = 'block';
+    errEl.textContent = "Remplis tous les champs.";
+    errEl.style.display = "block";
     return;
   }
 
-  // Loading state
-  loginBtn.disabled = true;
-  loginBtn.textContent = 'Connexion...';
+  document.getElementById("loginBtn").disabled = true;
+  document.getElementById("loginBtn").textContent = "Connexion…";
 
-  // Sign in with Supabase Auth
-  const { data, error } = await sb.auth.signInWithPassword({
-    email: email,
-    password: password
-  });
+  const { data, error } = await sb.auth.signInWithPassword({ email, password });
+
+  document.getElementById("loginBtn").disabled = false;
+  document.getElementById("loginBtn").textContent = "Connexion";
 
   if (error) {
-    loginBtn.disabled = false;
-    loginBtn.textContent = 'Connexion';
-    loginError.textContent = error.message;
-    loginError.style.display = 'block';
+    errEl.textContent = error.message;
+    errEl.style.display = "block";
+  }
+});
+
+document.getElementById("loginPassword").addEventListener("keydown", e => {
+  if (e.key === "Enter") document.getElementById("loginBtn").click();
+});
+
+document.getElementById("logoutBtn").addEventListener("click", async () => {
+  await sb.auth.signOut();
+  showToast("Déconnecté", "#475569");
+});
+
+// ─── STATS ────────────────────────────────────────────────
+async function loadStats() {
+  const today = new Date().toISOString().split('T')[0];
+
+  const [
+    { count: total },
+    { count: todayCount },
+    { count: eventsCount }
+  ] = await Promise.all([
+    sb.from('FindRISC_Form_Responses').select('id', { count: 'exact', head: true }),
+    sb.from('FindRISC_Form_Responses').select('id', { count: 'exact', head: true }).gte('created_at', today + 'T00:00:00'),
+    sb.from('events').select('id', { count: 'exact', head: true })
+  ]);
+
+  document.getElementById("statTotal").textContent  = total  ?? 0;
+  document.getElementById("statToday").textContent  = todayCount ?? 0;
+  document.getElementById("statEvents").textContent = eventsCount ?? 0;
+}
+
+// ─── LOAD EVENTS ──────────────────────────────────────────
+async function loadEvents() {
+  const container = document.getElementById("eventList");
+  container.innerHTML = `<div class="loader">Chargement…</div>`;
+
+  const { data: events, error } = await sb
+    .from('events')
+    .select('*')
+    .order('created_at', { ascending: false });
+
+  if (error || !events) {
+    container.innerHTML = `<div class="loader">Erreur : ${error?.message}</div>`;
     return;
   }
 
-  // Success - will be handled by onAuthStateChange
-  loginBtn.textContent = 'Connexion réussie!';
-});
+  if (events.length === 0) {
+    container.innerHTML = `<div class="loader">Aucun événement. Crée-en un !</div>`;
+    return;
+  }
 
- // Enter key triggers login
-loginPassword.addEventListener('keypress', (e) => {
-  if (e.key === 'Enter') loginBtn.click();
-});
-loginEmail.addEventListener('keypress', (e) => {
-  if (e.key === 'Enter') loginBtn.click();
-});
+  container.innerHTML = "";
 
-// ============================================
-// LOGOUT HANDLER
-// ============================================
-logoutBtn.addEventListener('click', async () => {
-  await sb.auth.signOut();
-  showLoginScreen();
-  showToast('Déconnecté', '#475569');
-});
-
-// ============================================
-// LOAD STATS
-// ============================================
-async function loadStats() {
-  try {
-    // Get total FindRISC_Form_Responses count
-    const { count: totalResponses, error: respError } = await sb
-      .from('FindRISC_Form_Responses')
-      .select('id', { count: 'exact', head: true });
-
-    if (respError) throw respError;
-
-    // Get today's FindRISC_Form_Responses
-    const today = new Date().toISOString().split('T')[0];
-    const { count: todayResponses, error: todayError } = await sb
+  // Pour chaque event, compter les réponses
+  for (const event of events) {
+    const { count: respCount } = await sb
       .from('FindRISC_Form_Responses')
       .select('id', { count: 'exact', head: true })
-      .gte('created_at', today + 'T00:00:00');
+      .eq('event_id', event.id);
 
-    if (todayError) throw todayError;
+    const url         = `${location.origin}/?event=${event.id}`;
+    const createdDate = new Date(event.created_at).toLocaleDateString('fr-FR');
+    const count       = respCount ?? 0;
 
-    // Get events count
-    const { count: eventsCount, error: eventsError } = await sb
-      .from('events')
-      .select('id', { count: 'exact', head: true });
+    const card = document.createElement("div");
+    card.className = "event-card";
+    card.style.flexDirection = "column";
+    card.style.alignItems = "stretch";
+    card.id = `card-${event.id}`;
 
-    if (eventsError) throw eventsError;
-
-    // Update UI
-    statTotal.textContent = totalResponses || 0;
-    statToday.textContent = todayResponses || 0;
-    statEvents.textContent = eventsCount || 0;
-  } catch (err) {
-    console.error('loadStats error:', err);
-    statTotal.textContent = '–';
-    statToday.textContent = '–';
-    statEvents.textContent = '–';
-  }
-}
-
-// ============================================
-// LOAD EVENTS
-// ============================================
-async function loadEvents() {
-  try {
-    const { data: events, error } = await sb
-      .from('events')
-      .select('*, FindRISC_Form_Responses(count)')
-      .order('created_at', { ascending: false });
-
-    if (error) throw error;
-
-    if (!events || events.length === 0) {
-      eventList.innerHTML = '<div class="loader">Aucun événement</div>';
-      return;
-    }
-
-    eventList.innerHTML = '';
-
-    events.forEach(event => {
-      c// AVANT
-      const url = `${location.origin}/?event=${event_id}`;
-// Le form.html doit lire ?event= comme UUID
-
-      const responseCount = event.FindRISC_Form_Responses?.[0]?.count || 0;
-      const createdDate = new Date(event.created_at).toLocaleDateString('fr-FR');
-
-      const card = document.createElement('div');
-      card.className = 'event-card';
-      card.innerHTML = `
+    card.innerHTML = `
+      <div style="display:flex;align-items:center;gap:20px;flex-wrap:wrap;">
         <div class="event-info">
-          <div class="event-name">${escapeHtml(event.name)}</div>
-          <div class="event-url">${escapeHtml(url)}</div>
-          <div class="event-meta">${responseCount} réponse${responseCount !== 1 ? 's' : ''} · ${createdDate}</div>
+          <div class="event-name">${esc(event.name)}</div>
+          <div class="event-url">${url}</div>
+          <div class="event-meta">
+            ${count} réponse${count > 1 ? 's' : ''} · créé le ${createdDate}
+          </div>
         </div>
-        <div class="qr-box" id="qr-${event_id}"></div>
+
+        <div class="qr-box" id="qr-${event.id}"></div>
+
         <div class="event-actions">
-          <button class="btn btn-blue copy-btn" data-url="${escapeHtml(url)}">Copier</button>
-          <button class="btn btn-red delete-btn" data-id="${event.id}" data-name="${escapeHtml(event.name)}">Supprimer</button>
+          <button class="btn btn-gray btn-sm" data-url="${esc(url)}" onclick="copyLink(this)">📋 Copier lien</button>
+          <button class="btn btn-purple btn-sm" onclick="toggleResponses('${event.id}')">📋 Voir réponses</button>
+          <button class="btn btn-green btn-sm" onclick="exportCSV('${event.id}', '${esc(event.name)}')">⬇️ Export CSV</button>
+          <button class="btn btn-red btn-sm" onclick="deleteEvent('${event.id}', '${esc(event.name)}')">🗑 Supprimer</button>
         </div>
-      `;
+      </div>
 
-      eventList.appendChild(card);
+      <!-- Panneau réponses (caché par défaut) -->
+      <div class="responses-panel hidden" id="panel-${event.id}">
+        <div class="responses-panel-header">
+          <h4>📊 Réponses – ${esc(event.name)}</h4>
+          <div class="panel-actions">
+            <button class="btn btn-green btn-sm" onclick="exportCSV('${event.id}', '${esc(event.name)}')">⬇️ Export CSV</button>
+          </div>
+        </div>
+        <div id="table-${event.id}"><div class="loader">Chargement…</div></div>
+      </div>
+    `;
 
-      // Generate QR Code
-      new QRCode(document.getElementById('qr-' + event.id), {
-        text: url,
-        width: 90,
-        height: 90,
-        correctLevel: QRCode.CorrectLevel.H
-      });
+    container.appendChild(card);
+
+    // QR Code
+    new QRCode(document.getElementById(`qr-${event.id}`), {
+      text: url,
+      width: 90,
+      height: 90,
+      correctLevel: QRCode.CorrectLevel.H
     });
-
-    // Attach event listeners for buttons
-    document.querySelectorAll('.copy-btn').forEach(btn => {
-      btn.addEventListener('click', () => {
-        navigator.clipboard.writeText(btn.dataset.url);
-        showToast('Lien copié !');
-      });
-    });
-
-    document.querySelectorAll('.delete-btn').forEach(btn => {
-      btn.addEventListener('click', async () => {
-        const id = btn.dataset.id;
-        const name = btn.dataset.name;
-        if (confirm('Supprimer l\'événement "' + name + '" ?')) {
-          await deleteEvent(id);
-        }
-      });
-    });
-
-  } catch (err) {
-    console.error('loadEvents error:', err);
-    eventList.innerHTML = '<div class="loader">Erreur de chargement</div>';
   }
 }
 
-// ============================================
-// CREATE EVENT
-// ============================================
-createEventBtn.addEventListener('click', async () => {
-  const name = eventNameInput.value.trim();
+// ─── COPY LINK ────────────────────────────────────────────
+function copyLink(btn) {
+  navigator.clipboard.writeText(btn.dataset.url);
+  showToast("Lien copié !");
+}
 
-  if (!name) {
-    eventNameInput.focus();
+// ─── TOGGLE RÉPONSES ─────────────────────────────────────
+async function toggleResponses(eventId) {
+  const panel = document.getElementById(`panel-${eventId}`);
+  const isHidden = panel.classList.contains('hidden');
+
+  if (!isHidden) {
+    panel.classList.add('hidden');
     return;
   }
 
-  createEventBtn.disabled = true;
-  createEventBtn.textContent = 'Création...';
+  panel.classList.remove('hidden');
+  await loadResponsesTable(eventId);
+}
 
-  try {
-    const { data: { user } } = await sb.auth.getUser();
-    
-    const { data, error } = await sb
-      .from('events')
-      .insert({
-        name: name,
-        user_id: user.id
-      })
-      .select()
-      .single();
+// ─── LOAD RESPONSES TABLE ─────────────────────────────────
+async function loadResponsesTable(eventId) {
+  const container = document.getElementById(`table-${eventId}`);
+  container.innerHTML = `<div class="loader">Chargement des réponses…</div>`;
 
-    if (error) throw error;
+  const { data, error } = await sb
+    .from('FindRISC_Form_Responses')
+    .select('*')
+    .eq('event_id', eventId)
+    .order('created_at', { ascending: false });
 
-    eventNameInput.value = '';
-    showToast('Événement créé ✅');
-    loadStats();
-    loadEvents();
-
-  } catch (err) {
-    console.error('createEvent error:', err);
-    showToast('Erreur : ' + err.message, '#ef4444');
-  } finally {
-    createEventBtn.disabled = false;
-    createEventBtn.textContent = 'Créer';
+  if (error) {
+    container.innerHTML = `<div class="no-data">Erreur : ${error.message}</div>`;
+    return;
   }
+
+  if (!data || data.length === 0) {
+    container.innerHTML = `<div class="no-data">Aucune réponse pour cet événement.</div>`;
+    return;
+  }
+
+  const rows = data.map(r => {
+    const score = computeScore(r);
+    const riskClass = getRiskClass(score);
+    const riskLabel = getRiskLabel(score);
+    const date  = new Date(r.created_at).toLocaleDateString('fr-FR');
+    const heure = new Date(r.created_at).toLocaleTimeString('fr-FR', { hour: '2-digit', minute: '2-digit' });
+
+    const bool = (v, labelOui='Oui', labelNon='Non') =>
+      v ? `<span class="badge badge-green">${labelOui}</span>`
+        : `<span class="badge badge-red">${labelNon}</span>`;
+
+    const anteColors = {
+      'Aucun':            'badge-blue',
+      'Famille éloignée': 'badge-yellow',
+      'Famille proche':   'badge-red'
+    };
+
+    return `
+      <tr>
+        <td>${date}<br><small style="color:#475569">${heure}</small></td>
+        <td>${r.email ? `<a href="mailto:${esc(r.email)}" style="color:#60a5fa">${esc(r.email)}</a>` : '<span style="color:#475569">–</span>'}</td>
+        <td><span class="badge badge-blue">${esc(r.age ?? '–')}</span></td>
+        <td><span class="badge badge-blue">${esc(r.IMC ?? '–')}</span></td>
+        <td>${bool(r.Act_physique)}</td>
+        <td>${bool(r.fruits_legumes)}</td>
+        <td>${bool(r.trait_hypertenseur, 'Oui', 'Non')}</td>
+        <td>${bool(r.glycemie, 'Oui', 'Non')}</td>
+        <td><span class="badge ${anteColors[r['antécédents']] ?? 'badge-blue'}">${esc(r['antécédents'] ?? '–')}</span></td>
+        <td><span class="score-pill ${riskClass}">${score}/26 – ${riskLabel}</span></td>
+      </tr>
+    `;
+  }).join('');
+
+  container.innerHTML = `
+    <div class="table-wrap">
+      <table>
+        <thead>
+          <tr>
+            <th>Date</th>
+            <th>Email</th>
+            <th>Âge</th>
+            <th>IMC</th>
+            <th>Activité</th>
+            <th>Fruits/Légumes</th>
+            <th>HTA</th>
+            <th>Glycémie</th>
+            <th>Antécédents</th>
+            <th>Score FINDRISC</th>
+          </tr>
+        </thead>
+        <tbody>${rows}</tbody>
+      </table>
+    </div>
+    <div style="font-size:0.78rem;color:#475569;margin-top:10px;text-align:right;">
+      ${data.length} réponse${data.length > 1 ? 's' : ''}
+    </div>
+  `;
+}
+
+// ─── EXPORT CSV ───────────────────────────────────────────
+async function exportCSV(eventId, eventName) {
+  showToast("Génération CSV…", "#3b82f6");
+
+  const { data, error } = await sb
+    .from('FindRISC_Form_Responses')
+    .select('*')
+    .eq('event_id', eventId)
+    .order('created_at', { ascending: false });
+
+  if (error || !data) {
+    showToast("Erreur export", "#ef4444");
+    return;
+  }
+
+  if (data.length === 0) {
+    showToast("Aucune réponse à exporter", "#f59e0b");
+    return;
+  }
+
+  const headers = ['Date','Heure','Email','Âge','IMC','Activité physique','Fruits & légumes','HTA','Glycémie élevée','Antécédents','Score FINDRISC','Niveau de risque'];
+
+  const csvRows = data.map(r => {
+    const score = computeScore(r);
+    const date  = new Date(r.created_at);
+    return [
+      date.toLocaleDateString('fr-FR'),
+      date.toLocaleTimeString('fr-FR', { hour: '2-digit', minute: '2-digit' }),
+      r.email ?? '',
+      r.age ?? '',
+      r.IMC ?? '',
+      r.Act_physique ? 'Oui' : 'Non',
+      r.fruits_legumes ? 'Oui' : 'Non',
+      r.trait_hypertenseur ? 'Oui' : 'Non',
+      r.glycemie ? 'Oui' : 'Non',
+      r['antécédents'] ?? '',
+      score,
+      getRiskLabel(score)
+    ].map(v => `"${String(v).replace(/"/g, '""')}"`).join(',');
+  });
+
+  const csv = '\uFEFF' + [headers.join(','), ...csvRows].join('\n'); // BOM pour Excel
+  const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
+  const url  = URL.createObjectURL(blob);
+  const a    = document.createElement('a');
+  a.href     = url;
+  a.download = `FINDRISC_${eventName.replace(/\s+/g,'_')}_${new Date().toISOString().split('T')[0]}.csv`;
+  a.click();
+  URL.revokeObjectURL(url);
+  showToast(`CSV exporté – ${data.length} lignes ✅`);
+}
+
+// ─── CREATE EVENT ─────────────────────────────────────────
+document.getElementById("createEventBtn").addEventListener("click", async () => {
+  const input = document.getElementById("eventNameInput");
+  const name  = input.value.trim();
+
+  if (!name) {
+    showToast("Donne un nom à l'événement", "#f59e0b");
+    input.focus();
+    return;
+  }
+
+  document.getElementById("createEventBtn").disabled = true;
+  document.getElementById("createEventBtn").textContent = "Création…";
+
+  const { data: { user } } = await sb.auth.getUser();
+
+  const { error } = await sb.from('events').insert([{ name, user_id: user.id }]);
+
+  document.getElementById("createEventBtn").disabled = false;
+  document.getElementById("createEventBtn").textContent = "Créer";
+
+  if (error) {
+    showToast("Erreur : " + error.message, "#ef4444");
+    return;
+  }
+
+  input.value = "";
+  showToast("Événement créé ✅");
+  loadStats();
+  loadEvents();
 });
 
-// Enter key creates event
-eventNameInput.addEventListener('keypress', (e) => {
-  if (e.key === 'Enter') createEventBtn.click();
+document.getElementById("eventNameInput").addEventListener("keydown", e => {
+  if (e.key === "Enter") document.getElementById("createEventBtn").click();
 });
 
-// ============================================
-// DELETE EVENT
-// ============================================
-async function deleteEvent(id) {
-  try {
-    const { error } = await sb
-      .from('events')
-      .delete()
-      .eq('id', id);
+// ─── DELETE EVENT ─────────────────────────────────────────
+async function deleteEvent(id, name) {
+  if (!confirm(`Supprimer "${name}" ?\nToutes les réponses liées seront dissociées.`)) return;
 
-    if (error) throw error;
+  const { error } = await sb.from('events').delete().eq('id', id);
 
-    showToast('Événement supprimé', '#ef4444');
-    loadStats();
-    loadEvents();
-
-  } catch (err) {
-    console.error('deleteEvent error:', err);
-    showToast('Erreur suppression', '#ef4444');
+  if (error) {
+    showToast("Erreur suppression : " + error.message, "#ef4444");
+    return;
   }
+
+  document.getElementById(`card-${id}`)?.remove();
+  showToast("Événement supprimé", "#ef4444");
+  loadStats();
 }
 </script>
-
-<script defer src="https://static.cloudflareinsights.com/beacon.min.js/v833ccba57c9e4d2798f2e76cebdd09a11778172276447" integrity="sha512-57MDmcccJXYtNnH+ZiBwzC4jb2rvgVCEokYN+L/nLlmO8rfYT/gIpW2A569iJ/3b+0UEasghjuZH/ma3wIs/EQ==" data-cf-beacon='{"version":"2024.11.0","token":"8607d2a720d14b038279025b2b5a82e5","server_timing":{"name":{"cfCacheStatus":true,"cfEdge":true,"cfExtPri":true,"cfL4":true,"cfOrigin":true,"cfSpeedBrain":true},"location_startswith":null}}' crossorigin="anonymous"></script>
 </body>
 </html>
