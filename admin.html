@@ -207,6 +207,15 @@ const sb = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
 
 let currentEventName = '';
 
+function toSlug(name) {
+  return name
+    .toLowerCase()
+    .normalize("NFD").replace(/[\u0300-\u036f]/g, "")
+    .replace(/[^a-z0-9]+/g, "-")
+    .replace(/^-|-$/g, "")
+    .slice(0, 40);
+}
+
 function esc(str) {
   if (!str) return '';
   return String(str).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
@@ -352,7 +361,7 @@ async function loadEvents() {
       .select('id', { count: 'exact', head: true })
       .eq('event_id', event.id);
 
-    const url         = `${location.origin}/?event=${event.id}`;
+    const url = `${location.origin}/?event=${event.slug || toSlug(event.name)}`;
     const createdDate = new Date(event.created_at).toLocaleDateString('fr-FR');
     const count       = respCount ?? 0;
 
@@ -635,7 +644,7 @@ document.getElementById("createEventBtn").addEventListener("click", async () => 
   document.getElementById("createEventBtn").textContent = "Création…";
 
   const { data: { user } } = await sb.auth.getUser();
-  const { error } = await sb.from('events').insert([{ name, user_id: user.id }]);
+  const { error } = await sb.from('events').insert([{ name, user_id: user.id, slug: toSlug(name) }]);
 
   document.getElementById("createEventBtn").disabled = false;
   document.getElementById("createEventBtn").textContent = "Créer";
