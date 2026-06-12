@@ -606,7 +606,7 @@ async function loadEvents() {
           <div class="event-url">${escapeHtml(url)}</div>
           <div class="event-meta">${responseCount} réponse${responseCount !== 1 ? 's' : ''} · ${createdDate}</div>
         </div>
-        <div class="qr-box" id="qr-${event.id}"></div>
+        <div class="qr-box" id="qr-${event_id}"></div>
         <div class="event-actions">
           <button class="btn btn-blue copy-btn" data-url="${escapeHtml(url)}">Copier</button>
           <button class="btn btn-red delete-btn" data-id="${event.id}" data-name="${escapeHtml(event.name)}">Supprimer</button>
