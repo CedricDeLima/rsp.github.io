@@ -1,92 +1,556 @@
 <!DOCTYPE html>
 <html lang="fr">
 <head>
-  <meta charset="UTF-8" />
-  <title>Formulaire FindRISC</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<meta charset="UTF-8">
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  
+  body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; background: #667eea; min-height: 100vh; padding-bottom: 40px; }
+  .container { max-width: 600px; margin: 0 auto; padding: 20px; }
+  
+  .hero {
+    color: white;
+    padding: 40px 20px;
+    text-align: center;
+  }
+  
+  h1 { font-size: 1.8rem; font-weight: 700; }
+  
+  .progress-text { font-size: 0.85rem; color: rgba(255,255,255,0.8); margin-bottom: 8px; }
+  
+  .card {
+    background: white;
+    border-radius: 16px;
+    padding: 28px;
+    margin-bottom: 20px;
+    box-shadow: 0 2px 12px rgba(0,0,0,0.08);
+  }
+  
+  .question-label {
+    font-size: 1rem;
+    font-weight: 600;
+    color: #1a202c;
+    margin-bottom: 14px;
+    line-height: 1.4;
+  }
+  .question-num {
+    display: inline-block;
+    background: #1a56db;
+    color: white;
+    border-radius: 50%;
+    width: 26px;
+    height: 26px;
+    text-align: center;
+    line-height: 26px;
+    font-size: 0.8rem;
+    font-weight: 700;
+    margin-right: 8px;
+    flex-shrink: 0;
+  }
+  
+  .options { display: flex; flex-direction: column; gap: 10px; }
+  
+  .option {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 12px 16px;
+    border: 2px solid #e2e8f0;
+    border-radius: 10px;
+    cursor: pointer;
+    transition: all 0.2s;
+    font-size: 0.95rem;
+  }
+  .option:hover { border-color: #1a56db; }
+  .option.selected { border-color: #1a56db; background: #eff6ff; }
+  .option input { display: none; }
+  .option .check {
+    width: 20px; height: 20px; border: 2px solid #cbd5e0; border-radius: 50%; flex-shrink: 0; display: flex; align-items: center; justify-content: center;
+  }
+  .option.selected .check { border-color: #1a56db; background: #1a56db; }
+  .option.selected .check::after { content: '✓'; color: white; font-size: 12px; }
+  
+  /* Boolean yes/no */
+  .bool-group { display: flex; gap: 12px; }
+  .bool-btn {
+    flex: 1;
+    padding: 14px;
+    border: 2px solid #e2e8f0;
+    border-radius: 10px;
+    cursor: pointer;
+    text-align: center;
+    font-size: 0.95rem;
+    font-weight: 600;
+    transition: all 0.2s;
+    background: white;
+  }
+  .bool-btn:hover { border-color: #1a56db; }
+  .bool-btn.selected { border-color: #1a56db; background: #eff6ff; color: #1a56db; }
+  
+  /* Email */
+  .email-input {
+    width: 100%;
+    padding: 14px 16px;
+    border: 2px solid #e2e8f0;
+    border-radius: 10px;
+    font-size: 1rem;
+    transition: border-color 0.2s;
+    outline: none;
+  }
+  .email-input:focus { border-color: #1a56db; }
+  
+  /* RGPD */
+  .rgpd-card {
+    background: #fffbeb;
+    border: 1px solid #fcd34d;
+    border-radius: 12px;
+    padding: 20px;
+    margin-bottom: 20px;
+  }
+  .rgpd-item {
+    display: flex;
+    align-items: flex-start;
+    gap: 10px;
+    margin-bottom: 10px;
+    font-size: 0.88rem;
+    color: #78350f;
+    line-height: 1.5;
+  }
+  .rgpd-item input { margin-top: 3px; }
+  
+  /* Submit */
+  .btn-submit {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    width: 100%;
+    padding: 18px;
+    color: white;
+    border: none;
+    border-radius: 12px;
+    font-size: 1.1rem;
+    font-weight: 700;
+    cursor: pointer;
+    transition: opacity 0.2s, transform 0.1s;
+  }
+  .btn-submit:hover { opacity: 0.95; }
+  .btn-submit:active { transform: scale(0.98); }
+  .btn-submit:disabled { opacity: 0.6; cursor: not-allowed; }
+  
+  /* Score */
+  .score-card {
+    display: none;
+    background: white;
+    border-radius: 16px;
+    padding: 36px 28px;
+    text-align: center;
+    box-shadow: 0 4px 24px rgba(0,0,0,0.12);
+  }
+  .score-circle {
+    width: 120px;
+    height: 120px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+    margin: 0 auto 24px;
+    font-weight: 800;
+  }
+  .score-num { font-size: 2.5rem; }
+  .score-label { font-size: 0.9rem; opacity: 0.8; }
+  .score-title { font-size: 1.3rem; font-weight: 700; margin-bottom: 12px; }
+  .score-desc { color: #6b7280; margin-bottom: 20px; line-height: 1.5; }
+  
+  .risk-faible { background: #d1fae5; color: #065f46; }
+  .risk-leger { background: #dbeafe; color: #1e3a8a; }
+  .risk-modere { background: #fef3c7; color: #92400e; }
+  .risk-eleve { background: #fee2e2; color: #991b1b; }
+  .risk-tres-eleve { background: #f3e8ff; color: #6b21a8; }
+  
+  .score-reco {
+    background: #f8fafc;
+    border-left: 4px solid #1a56db;
+    padding: 16px;
+    border-radius: 8px;
+    text-align: left;
+    font-size: 0.9rem;
+    color: #374151;
+    line-height: 1.6;
+  }
+  
+  .progress-bar-wrap {
+    background: #e2e8f0;
+    border-radius: 8px;
+    height: 8px;
+    margin-bottom: 24px;
+    overflow: hidden;
+  }
+  .progress-bar { height: 100%; background: linear-gradient(90deg, #667eea, #764ba2); border-radius: 8px; transition: width 0.3s; }
 
-  <link rel="stylesheet" href="/css/styles.css" />
+  .event-badge {
+    display: none;
+    background: rgba(255,255,255,0.2);
+    border: 1px solid rgba(255,255,255,0.4);
+    border-radius: 20px;
+    padding: 4px 14px;
+    font-size: 0.82rem;
+    margin-top: 10px;
+  }
+
+  @media(max-width:480px) {
+    .hero h1 { font-size: 1.5rem; }
+    .card { padding: 20px; }
+  }
+</style>
 </head>
-
 <body>
 
-  <h1>Évaluation du risque</h1>
+<div class="hero">
+  <h1>🩺 Test FINDRISC</h1>
+  <div class="event-badge" id="eventBadge"></div>
+</div>
 
-  <form id="form">
+<div class="container">
+  
+  <!-- Formulaire -->
+  <div id="formSection">
+    
+    <!-- Email -->
+    <div class="card">
+      <div class="question-label">📧 Votre email (optionnel)</div>
+      <input type="email" class="email-input" id="emailInput" placeholder="pour recevoir vos résultats">
+    </div>
 
-    <label>Âge</label>
-    <select id="age">
-      <option value="<45">< 45</option>
-      <option value="45-54">45-54</option>
-      <option value="55-64">55-64</option>
-      <option value="≥65">≥ 65</option>
-    </select>
+    <!-- Progress -->
+    <div style="margin-bottom: 6px;">
+      <div class="progress-text" id="progressText">0 / 8 réponses</div>
+      <div class="progress-bar-wrap">
+        <div class="progress-bar" id="progressBar" style="width: 0%"></div>
+      </div>
+    </div>
 
-    <label>IMC</label>
-    <select id="imc">
-      <option value="<25">< 25</option>
-      <option value="25-30">25-30</option>
-      <option value=">30">> 30</option>
-    </select>
+    <!-- Q1 - Age -->
+    <div class="card" id="q1">
+      <div class="question-label"><span class="question-num">1</span> Quel est votre âge ?</div>
+      <div class="options">
+        <label class="option"><input type="radio" name="age" value="0"><span class="check"></span>Moins de 45 ans</label>
+        <label class="option"><input type="radio" name="age" value="1"><span class="check"></span>45-54 ans</label>
+        <label class="option"><input type="radio" name="age" value="2"><span class="check"></span>55-64 ans</label>
+        <label class="option"><input type="radio" name="age" value="3"><span class="check"></span>65 ans et plus</label>
+      </div>
+    </div>
 
-    <label>Tour de taille</label>
-    <select id="taille">
-      <option value="low">Normal</option>
-      <option value="mid">Élevé</option>
-      <option value="high">Très élevé</option>
-    </select>
+    <!-- Q2 - IMC -->
+    <div class="card" id="q2">
+      <div class="question-label"><span class="question-num">2</span> Quel est votre IMC ?</div>
+      <div class="options">
+        <label class="option"><input type="radio" name="imc" value="0"><span class="check"></span>Moins de 25 kg/m²</label>
+        <label class="option"><input type="radio" name="imc" value="1"><span class="check"></span>25-30 kg/m²</label>
+        <label class="option"><input type="radio" name="imc" value="3"><span class="check"></span>Plus de 30 kg/m²</label>
+      </div>
+    </div>
 
-    <label>Activité physique régulière</label>
-    <input type="checkbox" id="sport" />
+    <!-- Q3 - Tour de taille -->
+    <div class="card" id="q3">
+      <div class="question-label"><span class="question-num">3</span> Quel est votre tour de taille ?</div>
+      <div id="q3-genre" style="margin-bottom:16px;">
+        <div class="bool-group">
+          <div class="bool-btn" onclick="setGenre('homme')" id="genreHomme">Homme</div>
+          <div class="bool-btn" onclick="setGenre('femme')" id="genreFemme">Femme</div>
+        </div>
+      </div>
+      <div id="q3-homme" style="display:none">
+        <div class="options">
+          <label class="option"><input type="radio" name="taille" value="0"><span class="check"></span>Moins de 94 cm</label>
+          <label class="option"><input type="radio" name="taille" value="3"><span class="check"></span>94-102 cm</label>
+          <label class="option"><input type="radio" name="taille" value="4"><span class="check"></span>Plus de 102 cm</label>
+        </div>
+      </div>
+      <div id="q3-femme" style="display:none">
+        <div class="options">
+          <label class="option"><input type="radio" name="taille" value="0"><span class="check"></span>Moins de 80 cm</label>
+          <label class="option"><input type="radio" name="taille" value="3"><span class="check"></span>80-88 cm</label>
+          <label class="option"><input type="radio" name="taille" value="4"><span class="check"></span>Plus de 88 cm</label>
+        </div>
+      </div>
+    </div>
 
-    <label>Consommation fruits/légumes</label>
-    <input type="checkbox" id="food" />
+    <!-- Q4 - Activité physique -->
+    <div class="card" id="q4">
+      <div class="question-label"><span class="question-num">4</span> Faites-vous au moins 30 min d'activité physique par jour ?</div>
+      <div class="bool-group">
+        <div class="bool-btn" onclick="setBool('act', true)" id="actOui">Oui</div>
+        <div class="bool-btn" onclick="setBool('act', false)" id="actNon">Non</div>
+      </div>
+    </div>
 
-    <label>Traitement hypertension</label>
-    <input type="checkbox" id="tension" />
+    <!-- Q5 - Fruits et légumes -->
+    <div class="card" id="q5">
+      <div class="question-label"><span class="question-num">5</span> Consommez-vous des fruits et légumes tous les jours ?</div>
+      <div class="bool-group">
+        <div class="bool-btn" onclick="setBool('fruits', true)" id="fruitsOui">Oui</div>
+        <div class="bool-btn" onclick="setBool('fruits', false)" id="fruitsNon">Non</div>
+      </div>
+    </div>
 
-    <label>Glycémie élevée</label>
-    <input type="checkbox" id="glycemie" />
+    <!-- Q6 - Traitement hypertenseur -->
+    <div class="card" id="q6">
+      <div class="question-label"><span class="question-num">6</span> Prenez-vous un traitement pour l'hypertension ?</div>
+      <div class="bool-group">
+        <div class="bool-btn" onclick="setBool('hta', true)" id="htaOui">Oui</div>
+        <div class="bool-btn" onclick="setBool('hta', false)" id="htaNon">Non</div>
+      </div>
+    </div>
 
-    <label>Antécédents familiaux</label>
-    <select id="antecedents">
-      <option value="Aucun">Aucun</option>
-      <option value="Famille éloignée">Famille éloignée</option>
-      <option value="Famille proche">Famille proche</option>
-    </select>
+    <!-- Q7 - Glycémie élevée -->
+    <div class="card" id="q7">
+      <div class="question-label"><span class="question-num">7</span> Avez-vous déjà eu une glycémie élevée ?</div>
+      <div class="bool-group">
+        <div class="bool-btn" onclick="setBool('glyc', true)" id="glycOui">Oui</div>
+        <div class="bool-btn" onclick="setBool('glyc', false)" id="glycNon">Non</div>
+      </div>
+    </div>
 
-    <br /><br />
+    <!-- Q8 - Antécédents familiaux -->
+    <div class="card" id="q8">
+      <div class="question-label"><span class="question-num">8</span> Un membre de votre famille est-il diabétique ?</div>
+      <div class="options">
+        <label class="option"><input type="radio" name="antecedents" value="0"><span class="check"></span>Non</label>
+        <label class="option"><input type="radio" name="antecedents" value="2"><span class="check"></span>Oui (grand-parent, oncle, tante)</label>
+        <label class="option"><input type="radio" name="antecedents" value="5"><span class="check"></span>Oui (parent, frère, sœur)</label>
+      </div>
+    </div>
 
-    <button type="submit">Envoyer</button>
+    <!-- RGPD -->
+    <div class="rgpd-card">
+      <div class="rgpd-item">
+        <input type="checkbox" id="rgpd1">
+        <label for="rgpd1">J'accepte que mes données soient utilisées pour recevoir des informations santé personnalisées.</label>
+      </div>
+      <div class="rgpd-item">
+        <input type="checkbox" id="rgpd2">
+        <label for="rgpd2">J'accepte de recevoir des offres partenaires ciblées (opt-out possible à tout moment).</label>
+      </div>
+    </div>
 
-  </form>
+    <button class="btn-submit" id="submitBtn" onclick="submitForm()">
+      🔍 Calculer mon score FINDRISC
+    </button>
 
-  <script type="module">
-    import { submitForm } from '/js/app.js';
+  </div><!-- end formSection -->
 
-    const form = document.getElementById("form");
+  <!-- Score -->
+  <div class="score-card" id="scoreCard">
+    <div class="score-circle" id="scoreCircle">
+      <span class="score-num" id="scoreNum">0</span>
+      <span class="score-label">/ 26 pts</span>
+    </div>
+    <div class="score-title" id="scoreTitle"></div>
+    <div class="score-desc" id="scoreDesc"></div>
+    <div class="score-reco" id="scoreReco"></div>
+  </div>
 
-    form.addEventListener("submit", async (e) => {
-      e.preventDefault();
+</div><!-- end container -->
 
-      const params = new URLSearchParams(window.location.search);
-      const eventId = params.get("event");
+<!-- Clean Architecture: external scripts -->
+<script type="module">
+  // ========== 1. CONFIG ==========
+  const SUPABASE_URL = "https://xrtmlddmoepmomvtjgok.supabase.co";
+  const SUPABASE_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZS1kZW1vIiwicm9sZSI6ImFub24iLCJleHAiOjE5ODM4MTI5OTZ9.CRXP1A7WOeoJeXxjNni43kdQwgnWNReilDMblYTn_I0";
 
-      const payload = {
-        event_id: eventId,
-        age: document.getElementById("age").value,
-        IMC: document.getElementById("imc").value,
-        tour_taille: document.getElementById("taille").value,
-        Act_physique: document.getElementById("sport").checked,
-        fruits_legumes: document.getElementById("food").checked,
-        trait_hypertenseur: document.getElementById("tension").checked,
-        glycemie: document.getElementById("glycemie").checked,
-        "antécédents": document.getElementById("antecedents").value
-      };
+  // ========== 2. SUPABASE CLIENT ==========
+  const { createClient } = supabase;
+  const db = createClient(SUPABASE_URL, SUPABASE_KEY);
 
-      await submitForm(payload);
+  // ========== 3. STATE ==========
+  const state = {
+    genre: null,
+    act: null,
+    fruits: null,
+    hta: null,
+    glyc: null
+  };
+
+  // ========== 4. HELPERS ==========
+  function getRadio(name) {
+    const el = document.querySelector(`input[name="${name}"]:checked`);
+    return el ? el.value : null;
+  }
+
+  function countAnswered() {
+    let c = 0;
+    if (getRadio('age') !== null) c++;
+    if (getRadio('imc') !== null) c++;
+    if (getRadio('taille') !== null) c++;
+    if (state.act !== null) c++;
+    if (state.fruits !== null) c++;
+    if (state.hta !== null) c++;
+    if (state.glyc !== null) c++;
+    if (getRadio('antecedents') !== null) c++;
+    return c;
+  }
+
+  function updateProgress() {
+    const c = countAnswered();
+    const pct = Math.round((c / 8) * 100);
+    document.getElementById('progressText').textContent = `${c} / 8 réponses`;
+    document.getElementById('progressBar').style.width = `${pct}%`;
+  }
+
+  function checkSubmit() {
+    const allAnswered = countAnswered() === 8;
+    const btn = document.getElementById('submitBtn');
+    btn.disabled = !allAnswered;
+    btn.style.opacity = allAnswered ? '1' : '0.6';
+  }
+
+  // ========== 5. EVENT HANDLERS ==========
+  window.setBool = function(key, val) {
+    state[key] = val;
+    document.getElementById(key + 'Oui').classList.toggle('selected', val === true);
+    document.getElementById(key + 'Non').classList.toggle('selected', val === false);
+    updateProgress();
+    checkSubmit();
+  };
+
+  window.setGenre = function(g) {
+    state.genre = g;
+    document.getElementById('genreHomme').classList.toggle('selected', g === 'homme');
+    document.getElementById('genreFemme').classList.toggle('selected', g === 'femme');
+    document.getElementById('q3-homme').style.display = g === 'homme' ? 'block' : 'none';
+    document.getElementById('q3-femme').style.display = g === 'femme' ? 'block' : 'none';
+    // Reset taille
+    document.querySelectorAll('input[name="taille"]').forEach(el => el.checked = false);
+    document.querySelectorAll('#q3 .option').forEach(el => el.classList.remove('selected'));
+    updateProgress();
+    checkSubmit();
+  };
+
+  // Style radio options
+  document.querySelectorAll('.option input[type="radio"]').forEach(radio => {
+    radio.addEventListener('change', function() {
+      // Clear siblings
+      this.closest('.options').querySelectorAll('.option').forEach(opt => opt.classList.remove('selected'));
+      this.closest('.option').classList.add('selected');
+      updateProgress();
+      checkSubmit();
     });
-  </script>
+  });
 
+  // ========== 6. GET EVENT FROM URL ==========
+  const urlParams = new URLSearchParams(window.location.search);
+  const eventName = urlParams.get('event');
+
+  if (eventName) {
+    document.getElementById('eventBadge').textContent = '🎯 ' + eventName;
+    document.getElementById('eventBadge').style.display = 'inline-block';
+  }
+
+  // ========== 7. CALC SCORE ==========
+  window.calcScore = function() {
+    let s = 0;
+    s += parseInt(getRadio('age') || 0);
+    s += parseInt(getRadio('imc') || 0);
+    s += parseInt(getRadio('taille') || 0);
+    if (!state.act) s += 2;
+    if (!state.fruits) s += 1;
+    if (state.hta) s += 2;
+    if (state.glyc) s += 5;
+    s += parseInt(getRadio('antecedents') || 0);
+    return s;
+  };
+
+  window.getRisk = function(score) {
+    if (score <= 6) return {
+      level: 'Faible', css: 'risk-faible',
+      title: '✅ Risque faible',
+      desc: 'Votre risque de développer un diabète est faible. Continuez vos bonnes habitudes !',
+      reco: 'Maintenez une alimentation équilibrée et une activité physique régulière. Un contrôle annuel reste recommandé.'
+    };
+    if (score <= 11) return {
+      level: 'Légèrement élevé', css: 'risk-leger',
+      title: '🔵 Risque légèrement élevé',
+      desc: 'Vous présentez un risque modéré. Quelques adjustments peuvent vous aider.',
+      reco: 'Augmentez votre activité physique (30min/jour), réduisez les aliments sucrés et Faites-vous tester régulièrement.'
+    };
+    if (score <= 14) return {
+      level: 'Modéré', css: 'risk-modere',
+      title: '🟡 Risque modéré',
+      desc: 'Votre risque est élevé. Il est temps d\'agir.',
+      reco: 'Consultez votre médecin pour un bilan glycémique. Réduisez le poids excédentaire si applicable.'
+    };
+    if (score <= 20) return {
+      level: 'Élevé', css: 'risk-eleve',
+      title: '🔴 Risque élevé',
+      desc: 'Votre risque de diabète est élevé. Une prise en charge est nécessaire.',
+      reco: 'Consultez rapidement un professionnel de santé. Un bilan complet (glycémie à jeun, HbA1c) est recommandé.'
+    };
+    return {
+      level: 'Très élevé', css: 'risk-tres-eleve',
+      title: '🟣 Risque très élevé',
+      desc: 'Votre risque est très élevé. Une prise en charge immédiate est recommandée.',
+      reco: 'Consultez un médecin sans délai. Un diagnostic précoce permet de prévenir les complications.'
+    };
+  };
+
+  // ========== 8. SUBMIT ==========
+  window.submitForm = async function() {
+    if (countAnswered() !== 8) return;
+
+    const emailVal = document.getElementById('emailInput').value;
+    const rgpd1 = document.getElementById('rgpd1').checked;
+    const rgpd2 = document.getElementById('rgpd2').checked;
+
+    const score = calcScore();
+    const risk = getRisk(score);
+
+    const btn = document.getElementById('submitBtn');
+    btn.disabled = true;
+    btn.textContent = '⏳ Enregistrement...';
+
+    // Map values to labels
+    const ageMap = {'0':'<45','1':'45-54','2':'55-64','3':'65+'};
+    const imcMap = {'0':'<25','1':'25-30','3':'>30'};
+    const anteMap = {'0':'Non','2':'Oui (non direct)','5':'Oui (direct)'};
+
+    const payload = {
+      email: emailVal || null,
+      age: ageMap[getRadio('age')],
+      IMC: imcMap[getRadio('imc')],
+      tour_taille: getRadio('taille'),
+      Act_physique: state.act,
+      fruits_legumes: state.fruits,
+      trait_hypertenseur: state.hta,
+      glycemie: state.glyc,
+      antecedents: anteMap[getRadio('antecedents')],
+      score: score,
+      event: eventName || 'direct',
+      rgpd_accept: rgpd1,
+      partner_accept: rgpd2
+    };
+
+    // Save to Supabase
+    const { error } = await db.from('responses').insert(payload);
+
+    if (error) {
+      console.error(error);
+      btn.textContent = '❌ Erreur – Réessayez';
+      btn.disabled = false;
+      return;
+    }
+
+    // Show score
+    document.getElementById('formSection').style.display = 'none';
+    const sc = document.getElementById('scoreCard');
+    sc.style.display = 'block';
+    const circle = document.getElementById('scoreCircle');
+    circle.className = 'score-circle ' + risk.css;
+    document.getElementById('scoreNum').textContent = score;
+    document.getElementById('scoreTitle').textContent = risk.title;
+    document.getElementById('scoreDesc').textContent = risk.desc;
+    document.getElementById('scoreReco').textContent = risk.reco;
+    window.scrollTo({top: 0, behavior: 'smooth'});
+  };
+</script>
+<script defer src="https://static.cloudflareinsights.com/beacon.min.js/v833ccba57c9e4d2798f2e76cebdd09a11778172276447" integrity="sha512-57MDmcccJXYtNnH+ZiBwzC4jb2rvgVCEokYN+L/nLlmO8rfYT/gIpW2A569iJ/3b+0UEasghjuZH/ma3wIs/EQ==" data-cf-beacon='{"version":"2024.11.0","token":"8607d2a720d14b038279025b2b5a82e5","server_timing":{"name":{"cfCacheStatus":true,"cfEdge":true,"cfExtPri":true,"cfL4":true,"cfOrigin":true,"cfSpeedBrain":true},"location_startswith":null}}' crossorigin="anonymous"></script>
 </body>
 </html>
