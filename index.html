@@ -340,7 +340,7 @@
         <label for="rgpd2">Je comprends que ce test est indicatif et ne remplace pas un diagnostic médical. Je suis encouragé(e) à consulter un professionnel de santé.</label>
       </div>
       <div style="font-size:0.78rem; color:#92400e; margin-top:8px;">
-        Données conservées 3 ans. Droit d'accès et suppression : <strong><a href="/cdn-cgi/l/email-protection" class="__cf_email__" data-cfemail="e4968197948b94d4d1a4878c8d878597c9838594ca8296">[email&#160;protected]</a></strong>
+        Données conservées 3 ans. Droit d'accès et suppression : <strong>respop05@chicas-gap.fr</strong>
       </div>
     </div>
 
@@ -367,7 +367,7 @@
 
 </div><!-- end container -->
 
-<script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script>
+<script>
 const SUPABASE_URL = 'https://xrtmlddmoepmomvtjgok.supabase.co';
 const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InhydG1sZGRtb2VwbW9tdnRqZ29rIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODA3NTE2NTEsImV4cCI6MjA5NjMyNzY1MX0.NL1O4kB1GRcEN_Ss4eVRfb3f_j7MbKFiWcScS4FMD5o';
 const { createClient } = supabase;
@@ -375,23 +375,12 @@ const db = createClient(SUPABASE_URL, SUPABASE_KEY);
 
 // Get event from URL
 const urlParams = new URLSearchParams(window.location.search);
-const eventName = urlParams.get('event') || '';
+const eventId   = urlParams.get('event') || null;   // UUID
+const eventName = urlParams.get('name')  || '';     // optionnel pour affichage
 if (eventName) {
   const badge = document.getElementById('eventBadge');
   badge.textContent = '📍 ' + decodeURIComponent(eventName);
   badge.style.display = 'inline-block';
-}
-
-// Resolve slug → UUID
-let eventId = null;
-if (eventName) {
-  const isUUID = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(eventName);
-  if (isUUID) {
-    eventId = eventName;
-  } else {
-    const { data: evData } = await db.from('events').select('id').eq('slug', eventName).maybeSingle();
-    if (evData) eventId = evData.id;
-  }
 }
 
 // State
@@ -542,7 +531,8 @@ async function submitForm() {
     trait_hypertenseur: state.hta,
     glycemie: state.glyc,
     antécédents: anteMap[getRadio('antecedents')],
-    event_id: eventId
+  event_id: eventId || null,   // UUID récupéré depuis l'URL
+  event: eventName || 'direct'
   };
 
   const { error } = await db.from('FindRISC_Form_Responses').insert([payload]);
@@ -567,6 +557,5 @@ async function submitForm() {
   window.scrollTo({top: 0, behavior: 'smooth'});
 }
 </script>
-<script defer src="https://static.cloudflareinsights.com/beacon.min.js/v833ccba57c9e4d2798f2e76cebdd09a11778172276447" integrity="sha512-57MDmcccJXYtNnH+ZiBwzC4jb2rvgVCEokYN+L/nLlmO8rfYT/gIpW2A569iJ/3b+0UEasghjuZH/ma3wIs/EQ==" data-cf-beacon='{"version":"2024.11.0","token":"8607d2a720d14b038279025b2b5a82e5","server_timing":{"name":{"cfCacheStatus":true,"cfEdge":true,"cfExtPri":true,"cfL4":true,"cfOrigin":true,"cfSpeedBrain":true},"location_startswith":null}}' crossorigin="anonymous"></script>
 </body>
 </html>
