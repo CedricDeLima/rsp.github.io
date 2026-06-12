@@ -11,7 +11,6 @@
 body { font-family: 'Segoe UI', sans-serif; background: #0f172a; color: #e2e8f0; min-height: 100vh; }
 .hidden { display: none !important; }
 
-/* LOGIN */
 #loginScreen { display: flex; align-items: center; justify-content: center; min-height: 100vh; }
 .login-card { background: #1e293b; border-radius: 16px; padding: 40px; width: 380px; box-shadow: 0 8px 32px rgba(0,0,0,0.5); }
 .login-card h2 { font-size: 1.4rem; margin-bottom: 6px; color: #f1f5f9; }
@@ -22,7 +21,6 @@ body { font-family: 'Segoe UI', sans-serif; background: #0f172a; color: #e2e8f0;
 .field input:focus { border-color: #3b82f6; }
 .error-msg { color: #f87171; font-size: 0.82rem; margin-bottom: 12px; display: none; }
 
-/* BUTTONS */
 .btn { padding: 11px 18px; border: none; border-radius: 8px; font-size: 0.9rem; font-weight: 700; cursor: pointer; transition: opacity 0.2s, transform 0.1s; }
 .btn:hover { opacity: 0.88; }
 .btn:active { transform: scale(0.98); }
@@ -34,28 +32,23 @@ body { font-family: 'Segoe UI', sans-serif; background: #0f172a; color: #e2e8f0;
 .btn-purple { background: #8b5cf6; color: white; }
 .btn-sm { padding: 7px 12px; font-size: 0.8rem; }
 
-/* TOPBAR */
 .topbar { background: #1e293b; padding: 16px 32px; display: flex; align-items: center; justify-content: space-between; border-bottom: 1px solid #334155; position: sticky; top: 0; z-index: 10; }
 .topbar h1 { font-size: 1.1rem; font-weight: 800; color: #f1f5f9; }
 .topbar-user { display: flex; align-items: center; gap: 12px; font-size: 0.82rem; color: #64748b; }
 
-/* CONTAINER */
 .container { max-width: 1100px; margin: 0 auto; padding: 32px 24px; }
 
-/* STATS */
 .stats-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(170px, 1fr)); gap: 16px; margin-bottom: 32px; }
 .stat-card { background: #1e293b; border: 1px solid #334155; border-radius: 12px; padding: 22px; text-align: center; }
 .stat-num { font-size: 2.4rem; font-weight: 900; color: #3b82f6; line-height: 1; }
 .stat-label { font-size: 0.78rem; color: #64748b; margin-top: 6px; text-transform: uppercase; letter-spacing: 0.05em; }
 
-/* CREATE */
 .create-card { background: #1e293b; border: 1px solid #334155; border-radius: 12px; padding: 24px; margin-bottom: 24px; }
 .create-card h3 { font-size: 1rem; color: #f1f5f9; margin-bottom: 16px; }
 .input-row { display: flex; gap: 10px; flex-wrap: wrap; }
 .text-input { flex: 1; min-width: 200px; padding: 12px 16px; border-radius: 8px; border: 2px solid #334155; background: #0f172a; color: white; font-size: 0.95rem; outline: none; transition: border-color 0.2s; }
 .text-input:focus { border-color: #3b82f6; }
 
-/* EVENTS */
 .section-title { font-size: 0.8rem; color: #64748b; text-transform: uppercase; letter-spacing: 0.08em; font-weight: 700; margin-bottom: 12px; }
 .event-grid { display: grid; gap: 14px; }
 .event-card { background: #1e293b; border: 1px solid #334155; border-radius: 12px; padding: 20px; display: flex; align-items: center; gap: 20px; flex-wrap: wrap; transition: border-color 0.2s; }
@@ -67,27 +60,11 @@ body { font-family: 'Segoe UI', sans-serif; background: #0f172a; color: #e2e8f0;
 .qr-box { background: white; padding: 8px; border-radius: 8px; flex-shrink: 0; }
 .event-actions { display: flex; flex-direction: column; gap: 8px; }
 
-/* RESPONSES PANEL */
-.responses-panel {
-  background: #0f172a;
-  border: 1px solid #1e3a5f;
-  border-radius: 10px;
-  padding: 20px;
-  margin-top: 12px;
-  width: 100%;
-}
-.responses-panel-header {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  margin-bottom: 16px;
-  flex-wrap: wrap;
-  gap: 10px;
-}
+.responses-panel { background: #0f172a; border: 1px solid #1e3a5f; border-radius: 10px; padding: 20px; margin-top: 12px; width: 100%; }
+.responses-panel-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 16px; flex-wrap: wrap; gap: 10px; }
 .responses-panel-header h4 { font-size: 0.95rem; color: #93c5fd; font-weight: 700; }
 .panel-actions { display: flex; gap: 8px; flex-wrap: wrap; }
 
-/* TABLE */
 .table-wrap { overflow-x: auto; }
 table { width: 100%; border-collapse: collapse; font-size: 0.8rem; }
 th { background: #1e293b; padding: 10px 12px; text-align: left; color: #94a3b8; font-weight: 600; font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.04em; border-bottom: 2px solid #334155; white-space: nowrap; }
@@ -101,7 +78,6 @@ tr:hover td { background: #1e293b44; }
 .badge-purple { background: #3b0764; color: #d8b4fe; }
 .no-data { text-align: center; padding: 30px; color: #475569; font-size: 0.85rem; }
 
-/* RISK SCORE */
 .score-pill { display: inline-block; padding: 3px 10px; border-radius: 20px; font-size: 0.75rem; font-weight: 800; }
 .score-low    { background: #d1fae5; color: #065f46; }
 .score-slight { background: #dbeafe; color: #1e3a8a; }
@@ -109,10 +85,29 @@ tr:hover td { background: #1e293b44; }
 .score-high   { background: #fee2e2; color: #991b1b; }
 .score-vhigh  { background: #fce7f3; color: #831843; }
 
-/* LOADER / TOAST */
 .loader { text-align: center; padding: 40px; color: #475569; font-size: 0.9rem; }
 .toast { position: fixed; bottom: 24px; right: 24px; background: #10b981; color: white; padding: 12px 20px; border-radius: 10px; font-size: 0.9rem; font-weight: 600; opacity: 0; transform: translateY(10px); transition: all 0.3s; z-index: 999; pointer-events: none; }
 .toast.show { opacity: 1; transform: translateY(0); }
+
+/* Modal styles */
+.modal-backdrop { position: fixed; inset: 0; background: rgba(0,0,0,0.7); display: flex; align-items: center; justify-content: center; z-index: 1000; opacity: 0; visibility: hidden; transition: all 0.3s; }
+.modal-backdrop.show { opacity: 1; visibility: visible; }
+.modal-content { background: #1e293b; border-radius: 16px; padding: 28px; width: 400px; max-width: 90%; box-shadow: 0 16px 48px rgba(0,0,0,0.5); transform: scale(0.9); transition: transform 0.3s; }
+.modal-backdrop.show .modal-content { transform: scale(1); }
+.modal-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 24px; }
+.modal-header h3 { font-size: 1.2rem; color: #f1f5f9; }
+.modal-close { background: #334155; border: none; color: #94a3b8; width: 32px; height: 32px; border-radius: 8px; cursor: pointer; font-size: 1.2rem; display: flex; align-items: center; justify-content: center; transition: all 0.2s; }
+.modal-close:hover { background: #475569; color: white; }
+.url-input-group { display: flex; gap: 8px; margin-bottom: 24px; }
+.url-input-group input { flex: 1; padding: 12px 14px; border-radius: 8px; border: 2px solid #334155; background: #0f172a; color: #e2e8f0; font-size: 0.9rem; outline: none; }
+.url-input-group input:focus { border-color: #3b82f6; }
+.url-input-group .btn-copy { padding: 12px 16px; background: #3b82f6; color: white; border: none; border-radius: 8px; font-weight: 700; cursor: pointer; transition: opacity 0.2s; }
+.url-input-group .btn-copy:hover { opacity: 0.88; }
+.qr-section { text-align: center; }
+.qr-section h4 { font-size: 0.85rem; color: #64748b; margin-bottom: 16px; text-transform: uppercase; letter-spacing: 0.05em; }
+.qr-container { background: white; padding: 16px; border-radius: 12px; display: inline-block; margin-bottom: 16px; }
+.qr-section .btn-download { padding: 10px 20px; background: #10b981; color: white; border: none; border-radius: 8px; font-weight: 700; cursor: pointer; font-size: 0.9rem; transition: opacity 0.2s; }
+.qr-section .btn-download:hover { opacity: 0.88; }
 
 @media(max-width:600px) {
   .topbar { padding: 12px 16px; }
@@ -120,19 +115,19 @@ tr:hover td { background: #1e293b44; }
   .event-card { flex-direction: column; align-items: flex-start; }
   .event-actions { flex-direction: row; }
   .login-card { width: 90%; padding: 24px; }
+  .modal-content { padding: 20px; width: 95%; }
 }
 </style>
 </head>
 <body>
 
-<!-- LOGIN -->
 <div id="loginScreen">
   <div class="login-card">
-    <h2>🔐Administration – Gestion des Events/Forms ReSpoP</h2>
+    <h2>🔐 Gestion des Events/Forms ReSpoP</h2>
     <p>Accès réservé aux administrateurs</p>
     <div class="field">
       <label>Email</label>
-      <input type="email" id="loginEmail" placeholder="respop05@chicas-gap.fr" autocomplete="email">
+      <input type="email" id="loginEmail" placeholder="admin@respop.fr" autocomplete="email">
     </div>
     <div class="field">
       <label>Mot de passe</label>
@@ -143,7 +138,6 @@ tr:hover td { background: #1e293b44; }
   </div>
 </div>
 
-<!-- MAIN APP -->
 <div id="mainApp" class="hidden">
   <div class="topbar">
     <h1>🗂 Administration – Gestion des Events/Forms ReSpoP</h1>
@@ -154,7 +148,6 @@ tr:hover td { background: #1e293b44; }
   </div>
 
   <div class="container">
-    <!-- Stats -->
     <div class="stats-grid">
       <div class="stat-card">
         <div class="stat-num" id="statTotal">–</div>
@@ -170,16 +163,14 @@ tr:hover td { background: #1e293b44; }
       </div>
     </div>
 
-    <!-- Créer événement -->
     <div class="create-card">
       <h3>➕ Créer un événement</h3>
       <div class="input-row">
-        <input class="text-input" id="eventNameInput" placeholder="Nom de l'événement (ex: Forum Santé 2026)" maxlength="80">
+        <input class="text-input" id="eventNameInput" placeholder="Nom de l'événement (ex: Forum BTP 2026)" maxlength="80">
         <button class="btn btn-green" id="createEventBtn">Créer</button>
       </div>
     </div>
 
-    <!-- Liste événements -->
     <div class="section-title">Événements</div>
     <div id="eventList" class="event-grid">
       <div class="loader">Chargement…</div>
@@ -187,18 +178,38 @@ tr:hover td { background: #1e293b44; }
   </div>
 </div>
 
+<!-- Share Modal -->
+<div class="modal-backdrop" id="shareModal">
+  <div class="modal-content">
+    <div class="modal-header">
+      <h3>Partager l'événement</h3>
+      <button class="modal-close" onclick="closeShareModal()">×</button>
+    </div>
+    <div class="url-input-group">
+      <input type="text" id="modalUrlInput" readonly>
+      <button class="btn-copy" id="modalCopyBtn" onclick="copyModalUrl()">Copier</button>
+    </div>
+    <div class="qr-section">
+      <h4>Code QR</h4>
+      <div class="qr-container" id="modalQRContainer"></div>
+      <br>
+      <button class="btn-download" onclick="downloadQR()">Télécharger QR</button>
+    </div>
+  </div>
+</div>
+
 <div class="toast" id="toast"></div>
 
 <script>
-// ─── CONFIG ───────────────────────────────────────────────
 const SUPABASE_URL = "https://xrtmlddmoepmomvtjgok.supabase.co";
 const SUPABASE_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InhydG1sZGRtb2VwbW9tdnRqZ29rIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODA3NTE2NTEsImV4cCI6MjA5NjMyNzY1MX0.NL1O4kB1GRcEN_Ss4eVRfb3f_j7MbKFiWcScS4FMD5o";
 const sb = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
 
-// ─── UTILS ────────────────────────────────────────────────
+let currentEventName = '';
+
 function esc(str) {
   if (!str) return '';
-  return String(str).replace(/&/g,'&').replace(/</g,'<').replace(/>/g,'>').replace(/"/g,'"');
+  return String(str).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
 }
 
 function showToast(msg, color = "#10b981") {
@@ -225,7 +236,6 @@ function getRiskLabel(score) {
   return 'Très élevé';
 }
 
-// Calcul score FINDRISC depuis les données stockées
 function computeScore(r) {
   const ageMap  = {'<45':0,'45-54':2,'55-64':3,'≥65':4};
   const imcMap  = {'<25':0,'25-30':1,'>30':3};
@@ -233,7 +243,6 @@ function computeScore(r) {
   let s = 0;
   s += ageMap[r.age]  ?? 0;
   s += imcMap[r.IMC]  ?? 0;
-  // tour de taille non stocké séparément → ignoré dans le recalcul
   if (!r.Act_physique)     s += 2;
   if (!r.fruits_legumes)   s += 1;
   if (r.trait_hypertenseur) s += 2;
@@ -242,7 +251,6 @@ function computeScore(r) {
   return s;
 }
 
-// ─── AUTH ─────────────────────────────────────────────────
 function showApp(user) {
   document.getElementById("loginScreen").classList.add("hidden");
   document.getElementById("mainApp").classList.remove("hidden");
@@ -256,7 +264,6 @@ function showLogin() {
   document.getElementById("loginScreen").classList.remove("hidden");
 }
 
-// Vérif session au chargement
 sb.auth.getSession().then(({ data }) => {
   if (data.session) showApp(data.session.user);
 });
@@ -301,10 +308,8 @@ document.getElementById("logoutBtn").addEventListener("click", async () => {
   showToast("Déconnecté", "#475569");
 });
 
-// ─── STATS ────────────────────────────────────────────────
 async function loadStats() {
   const today = new Date().toISOString().split('T')[0];
-
   const [
     { count: total },
     { count: todayCount },
@@ -320,7 +325,6 @@ async function loadStats() {
   document.getElementById("statEvents").textContent = eventsCount ?? 0;
 }
 
-// ─── LOAD EVENTS ──────────────────────────────────────────
 async function loadEvents() {
   const container = document.getElementById("eventList");
   container.innerHTML = `<div class="loader">Chargement…</div>`;
@@ -342,7 +346,6 @@ async function loadEvents() {
 
   container.innerHTML = "";
 
-  // Pour chaque event, compter les réponses
   for (const event of events) {
     const { count: respCount } = await sb
       .from('FindRISC_Form_Responses')
@@ -372,14 +375,13 @@ async function loadEvents() {
         <div class="qr-box" id="qr-${event.id}"></div>
 
         <div class="event-actions">
-          <button class="btn btn-gray btn-sm" data-url="${esc(url)}" onclick="copyLink(this)">📋 Copier lien</button>
+          <button class="btn btn-gray btn-sm" onclick="openShareModal('${esc(url)}', '${esc(event.name)}')">📋 Copier lien</button>
           <button class="btn btn-purple btn-sm" onclick="toggleResponses('${event.id}')">📋 Voir réponses</button>
           <button class="btn btn-green btn-sm" onclick="exportCSV('${event.id}', '${esc(event.name)}')">⬇️ Export CSV</button>
           <button class="btn btn-red btn-sm" onclick="deleteEvent('${event.id}', '${esc(event.name)}')">🗑 Supprimer</button>
         </div>
       </div>
 
-      <!-- Panneau réponses (caché par défaut) -->
       <div class="responses-panel hidden" id="panel-${event.id}">
         <div class="responses-panel-header">
           <h4>📊 Réponses – ${esc(event.name)}</h4>
@@ -393,7 +395,6 @@ async function loadEvents() {
 
     container.appendChild(card);
 
-    // QR Code
     new QRCode(document.getElementById(`qr-${event.id}`), {
       text: url,
       width: 90,
@@ -403,13 +404,80 @@ async function loadEvents() {
   }
 }
 
-// ─── COPY LINK ────────────────────────────────────────────
-function copyLink(btn) {
-  navigator.clipboard.writeText(btn.dataset.url);
-  showToast("Lien copié !");
+// Modal functions
+function openShareModal(url, eventName) {
+  currentEventName = eventName;
+  document.getElementById("modalUrlInput").value = url;
+  
+  // Clear and regenerate QR code
+  const qrContainer = document.getElementById("modalQRContainer");
+  qrContainer.innerHTML = "";
+  new QRCode(qrContainer, {
+    text: url,
+    width: 200,
+    height: 200,
+    correctLevel: QRCode.CorrectLevel.H
+  });
+  
+  // Reset copy button text
+  document.getElementById("modalCopyBtn").textContent = "Copier";
+  
+  // Show modal
+  document.getElementById("shareModal").classList.add("show");
 }
 
-// ─── TOGGLE RÉPONSES ─────────────────────────────────────
+function closeShareModal() {
+  document.getElementById("shareModal").classList.remove("show");
+}
+
+function copyModalUrl() {
+  const urlInput = document.getElementById("modalUrlInput");
+  navigator.clipboard.writeText(urlInput.value).then(() => {
+    document.getElementById("modalCopyBtn").textContent = "✓ Copié !";
+    setTimeout(() => {
+      document.getElementById("modalCopyBtn").textContent = "Copier";
+    }, 2000);
+  });
+}
+
+function downloadQR() {
+  const qrContainer = document.getElementById("modalQRContainer");
+  const canvas = qrContainer.querySelector('canvas');
+  
+  if (canvas) {
+    const dataUrl = canvas.toDataURL("image/png");
+    const link = document.createElement('a');
+    link.download = `QR_${currentEventName.replace(/\s+/g, '_')}.png`;
+    link.href = dataUrl;
+    link.click();
+    showToast("QR code téléchargé ✅");
+  } else {
+    // Fallback for img element (older qrcodejs versions)
+    const img = qrContainer.querySelector('img');
+    if (img) {
+      const link = document.createElement('a');
+      link.download = `QR_${currentEventName.replace(/\s+/g, '_')}.png`;
+      link.href = img.src;
+      link.click();
+      showToast("QR code téléchargé ✅");
+    }
+  }
+}
+
+// Close modal on backdrop click
+document.getElementById("shareModal").addEventListener("click", function(e) {
+  if (e.target === this) {
+    closeShareModal();
+  }
+});
+
+// Close modal on Escape key
+document.addEventListener("keydown", function(e) {
+  if (e.key === "Escape") {
+    closeShareModal();
+  }
+});
+
 async function toggleResponses(eventId) {
   const panel = document.getElementById(`panel-${eventId}`);
   const isHidden = panel.classList.contains('hidden');
@@ -423,7 +491,6 @@ async function toggleResponses(eventId) {
   await loadResponsesTable(eventId);
 }
 
-// ─── LOAD RESPONSES TABLE ─────────────────────────────────
 async function loadResponsesTable(eventId) {
   const container = document.getElementById(`table-${eventId}`);
   container.innerHTML = `<div class="loader">Chargement des réponses…</div>`;
@@ -503,7 +570,6 @@ async function loadResponsesTable(eventId) {
   `;
 }
 
-// ─── EXPORT CSV ───────────────────────────────────────────
 async function exportCSV(eventId, eventName) {
   showToast("Génération CSV…", "#3b82f6");
 
@@ -544,7 +610,7 @@ async function exportCSV(eventId, eventName) {
     ].map(v => `"${String(v).replace(/"/g, '""')}"`).join(',');
   });
 
-  const csv = '\uFEFF' + [headers.join(','), ...csvRows].join('\n'); // BOM pour Excel
+  const csv = '\uFEFF' + [headers.join(','), ...csvRows].join('\n');
   const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
   const url  = URL.createObjectURL(blob);
   const a    = document.createElement('a');
@@ -555,7 +621,6 @@ async function exportCSV(eventId, eventName) {
   showToast(`CSV exporté – ${data.length} lignes ✅`);
 }
 
-// ─── CREATE EVENT ─────────────────────────────────────────
 document.getElementById("createEventBtn").addEventListener("click", async () => {
   const input = document.getElementById("eventNameInput");
   const name  = input.value.trim();
@@ -570,7 +635,6 @@ document.getElementById("createEventBtn").addEventListener("click", async () => 
   document.getElementById("createEventBtn").textContent = "Création…";
 
   const { data: { user } } = await sb.auth.getUser();
-
   const { error } = await sb.from('events').insert([{ name, user_id: user.id }]);
 
   document.getElementById("createEventBtn").disabled = false;
@@ -591,7 +655,6 @@ document.getElementById("eventNameInput").addEventListener("keydown", e => {
   if (e.key === "Enter") document.getElementById("createEventBtn").click();
 });
 
-// ─── DELETE EVENT ─────────────────────────────────────────
 async function deleteEvent(id, name) {
   if (!confirm(`Supprimer "${name}" ?\nToutes les réponses liées seront dissociées.`)) return;
 
@@ -607,5 +670,6 @@ async function deleteEvent(id, name) {
   loadStats();
 }
 </script>
+<script defer src="https://static.cloudflareinsights.com/beacon.min.js/v833ccba57c9e4d2798f2e76cebdd09a11778172276447" integrity="sha512-57MDmcccJXYtNnH+ZiBwzC4jb2rvgVCEokYN+L/nLlmO8rfYT/gIpW2A569iJ/3b+0UEasghjuZH/ma3wIs/EQ==" data-cf-beacon='{"version":"2024.11.0","token":"8607d2a720d14b038279025b2b5a82e5","server_timing":{"name":{"cfCacheStatus":true,"cfEdge":true,"cfExtPri":true,"cfL4":true,"cfOrigin":true,"cfSpeedBrain":true},"location_startswith":null}}' crossorigin="anonymous"></script>
 </body>
 </html>
