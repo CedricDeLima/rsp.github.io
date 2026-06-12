@@ -592,7 +592,7 @@ async function loadEvents() {
 
     events.forEach(event => {
       c// AVANT
-      const url = `${location.origin}/form.html?event=${event.id}`;
+      const url = `${location.origin}/?event=${event.id}`;
 //                                                ↑ déjà correct ✅
 // Le form.html doit lire ?event= comme UUID
 
