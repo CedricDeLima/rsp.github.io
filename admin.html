@@ -536,17 +536,17 @@ logoutBtn.addEventListener('click', async () => {
 // ============================================
 async function loadStats() {
   try {
-    // Get total responses count
+    // Get total FindRISC_Form_Responses count
     const { count: totalResponses, error: respError } = await sb
-      .from('responses')
+      .from('FindRISC_Form_Responses')
       .select('id', { count: 'exact', head: true });
 
     if (respError) throw respError;
 
-    // Get today's responses
+    // Get today's FindRISC_Form_Responses
     const today = new Date().toISOString().split('T')[0];
     const { count: todayResponses, error: todayError } = await sb
-      .from('responses')
+      .from('FindRISC_Form_Responses')
       .select('id', { count: 'exact', head: true })
       .gte('created_at', today + 'T00:00:00');
 
@@ -578,7 +578,7 @@ async function loadEvents() {
   try {
     const { data: events, error } = await sb
       .from('events')
-      .select('*, responses(count)')
+      .select('*, FindRISC_Form_Responses(count)')
       .order('created_at', { ascending: false });
 
     if (error) throw error;
@@ -596,7 +596,7 @@ async function loadEvents() {
 //                                                ↑ déjà correct ✅
 // Le form.html doit lire ?event= comme UUID
 
-      const responseCount = event.responses?.[0]?.count || 0;
+      const responseCount = event.FindRISC_Form_Responses?.[0]?.count || 0;
       const createdDate = new Date(event.created_at).toLocaleDateString('fr-FR');
 
       const card = document.createElement('div');
