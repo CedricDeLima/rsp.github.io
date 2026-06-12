@@ -375,7 +375,8 @@ const db = createClient(SUPABASE_URL, SUPABASE_KEY);
 
 // Get event from URL
 const urlParams = new URLSearchParams(window.location.search);
-const eventName = urlParams.get('event') || '';
+const eventId   = urlParams.get('event') || null;   // UUID
+const eventName = urlParams.get('name')  || '';     // optionnel pour affichage
 if (eventName) {
   const badge = document.getElementById('eventBadge');
   badge.textContent = '📍 ' + decodeURIComponent(eventName);
