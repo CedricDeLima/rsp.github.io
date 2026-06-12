@@ -591,7 +591,11 @@ async function loadEvents() {
     eventList.innerHTML = '';
 
     events.forEach(event => {
-      const url = window.location.origin + window.location.pathname + '?event=' + encodeURIComponent(event.name);
+      c// AVANT
+      const url = `${location.origin}/form.html?event=${event.id}`;
+//                                                ↑ déjà correct ✅
+// Le form.html doit lire ?event= comme UUID
+
       const responseCount = event.responses?.[0]?.count || 0;
       const createdDate = new Date(event.created_at).toLocaleDateString('fr-FR');
 
