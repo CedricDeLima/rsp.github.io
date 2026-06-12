@@ -592,8 +592,7 @@ async function loadEvents() {
 
     events.forEach(event => {
       c// AVANT
-      const url = `${location.origin}/?event=${event.id}`;
-//                                                ↑ déjà correct ✅
+      const url = `${location.origin}/?event=${event_id}`;
 // Le form.html doit lire ?event= comme UUID
 
       const responseCount = event.FindRISC_Form_Responses?.[0]?.count || 0;
