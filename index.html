@@ -375,7 +375,7 @@ const db = createClient(SUPABASE_URL, SUPABASE_KEY);
 
 // Get event from URL
 const urlParams = new URLSearchParams(window.location.search);
-const eventId   = urlParams.get('event') || null;   // UUID
+const eventId = urlParams.get('event_id');
 const eventName = urlParams.get('name')  || '';     // optionnel pour affichage
 if (eventName) {
   const badge = document.getElementById('eventBadge');
@@ -531,8 +531,10 @@ async function submitForm() {
     trait_hypertenseur: state.hta,
     glycemie: state.glyc,
     antécédents: anteMap[getRadio('antecedents')],
-  event_id: eventId || null,   // UUID récupéré depuis l'URL
-  event: eventName || 'direct'
+    event_id: eventId || null,   // UUID récupéré depuis l'URL
+    event: eventName || 'direct',
+     score: score,
+  risk_level: risk.level
   };
 
   const { error } = await db.from('FindRISC_Form_Responses').insert([payload]);
