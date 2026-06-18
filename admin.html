@@ -361,7 +361,9 @@ async function loadEvents() {
       .select('id', { count: 'exact', head: true })
       .eq('event_id', event.id);
 
-    const url = `${location.origin}/?event_id=${event.id}&name=${encodeURIComponent(event.name)}`;
+    const basePath = location.pathname.includes('rsp.github.io') ? '/rsp.github.io' : '';
+    const url = `${location.origin}${basePath}/?event_id=${event.id}&name=${encodeURIComponent(event.name)}`;
+
     const createdDate = new Date(event.created_at).toLocaleDateString('fr-FR');
     const count       = respCount ?? 0;
 
