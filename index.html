@@ -255,7 +255,15 @@
     <div class="card" id="q3">
       <div class="question-label"><span class="question-num">3</span>Quel est votre tour de taille ?</div>
       <div style="font-size:0.82rem; color:#6b7280; margin-bottom:12px;">Mesuré à mi-chemin entre la dernière côte et le haut du bassin</div>
-      <div id="q3-homme" style="display:none">
+           <div id="q3-genre" style="margin-bottom:16px;">
+        <div style="font-size:0.85rem; font-weight:600; color:#4b5563; margin-bottom:8px;">Vous êtes :</div>
+        <div class="bool-group">
+          <button class="bool-btn" onclick="setGenre('homme')">👨 Homme</button>
+          <button class="bool-btn" onclick="setGenre('femme')">👩 Femme</button>
+        </div>
+      </div> 
+     
+     <div id="q3-homme" style="display:none">
         <div style="font-size:0.85rem; font-weight:600; color:#4b5563; margin-bottom:8px;">Homme :</div>
         <div class="options">
           <label class="option"><input type="radio" name="taille" value="0"> Moins de 94 cm</label>
@@ -271,13 +279,7 @@
           <label class="option"><input type="radio" name="taille" value="4"> Plus de 88 cm</label>
         </div>
       </div>
-      <div id="q3-genre" style="margin-bottom:16px;">
-        <div style="font-size:0.85rem; font-weight:600; color:#4b5563; margin-bottom:8px;">Vous êtes :</div>
-        <div class="bool-group">
-          <button class="bool-btn" onclick="setGenre('homme')">👨 Homme</button>
-          <button class="bool-btn" onclick="setGenre('femme')">👩 Femme</button>
-        </div>
-      </div>
+
     </div>
 
     <!-- Q4 - Activité physique -->
