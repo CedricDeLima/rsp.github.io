@@ -414,6 +414,7 @@ function getRadio(name) {
 
 function countAnswered() {
   let c = 0;
+  if (state.genre !== null) c++;
   if (getRadio('age') !== null) c++;
   if (getRadio('imc') !== null) c++;
   if (getRadio('taille') !== null) c++;
@@ -427,9 +428,9 @@ function countAnswered() {
 
 function updateProgress() {
   const c = countAnswered();
-  const pct = Math.round((c / 8) * 100);
-  document.getElementById('progressBar').style.width = Math.max(pct, 5) + '%';
-  document.getElementById('progressText').textContent = `Question ${Math.min(c+1,8)} sur 8`;
+  const pct = Math.round((c / 9) * 100);
+  document.getElementById('progressBar').style.width = Math.max(pct, 9) + '%';
+  document.getElementById('progressText').textContent = `Question ${Math.min(c+1,9)} sur 9`;
 }
 
 function checkSubmit() {
