@@ -398,14 +398,30 @@ function setBool(key, val) {
 
 function setGenre(g) {
   state.genre = g;
-  document.getElementById('q3-genre').style.display = 'none';
+
+  // ✅ on garde le bloc visible
+  // document.getElementById('q3-genre').style.display = 'none';
+
   document.getElementById('q3-homme').style.display = g === 'homme' ? 'block' : 'none';
   document.getElementById('q3-femme').style.display = g === 'femme' ? 'block' : 'none';
+
   // reset taille
   document.querySelectorAll('input[name="taille"]').forEach(r => r.checked = false);
+
+  // ✅ style bouton sélectionné
+  const buttons = document.querySelectorAll('#q3-genre .bool-btn');
+  buttons.forEach(btn => btn.classList.remove('selected-yes'));
+
+  if (g === 'homme') {
+    buttons[0].classList.add('selected-yes');
+  } else {
+    buttons[1].classList.add('selected-yes');
+  }
+
   updateProgress();
   checkSubmit();
 }
+
 
 function getRadio(name) {
   const el = document.querySelector(`input[name="${name}"]:checked`);
