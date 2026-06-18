@@ -524,6 +524,7 @@ async function submitForm() {
 
   const payload = {
     email: emailVal || null,
+    sexe: state.genre, 
     age: ageMap[getRadio('age')],
     IMC: imcMap[getRadio('imc')],
     Act_physique: state.act,
