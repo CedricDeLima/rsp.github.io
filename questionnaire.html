@@ -201,21 +201,7 @@
     .hero h1 { font-size: 1.5rem; }
     .card { padding: 20px; }
   }
- function retourAccueil() {
-  const params = new URLSearchParams(window.location.search);
-  const eventId = params.get('event_id');
-  const eventName = params.get('name');
-
-  let url = 'index.html';
-  const newParams = new URLSearchParams();
-  if (eventId) newParams.set('event_id', eventId);
-  if (eventName) newParams.set('name', eventName);
-
-  const qs = newParams.toString();
-  if (qs) url += '?' + qs;
-
-  window.location.href = url;
-}
+ 
 
 </style>
 </head>
@@ -479,6 +465,22 @@ function checkSubmit() {
   const rgpd = document.getElementById('rgpd1').checked && document.getElementById('rgpd2').checked;
   document.getElementById('submitBtn').disabled = !(allAnswered && rgpd);
 }
+function retourAccueil() {
+  const params = new URLSearchParams(window.location.search);
+  const eventId = params.get('event_id');
+  const eventName = params.get('name');
+
+  let url = 'index.html';
+  const newParams = new URLSearchParams();
+  if (eventId) newParams.set('event_id', eventId);
+  if (eventName) newParams.set('name', eventName);
+
+  const qs = newParams.toString();
+  if (qs) url += '?' + qs;
+
+  window.location.href = url;
+}
+
 
 // Listen radio changes
 document.querySelectorAll('input[type="radio"]').forEach(r => {
