@@ -48,11 +48,7 @@
 </head>
 <body>
 <div class="home-container">
-  <h1>🩺 Bienvenue</h1>
-  <p>Évaluez votre risque de diabète en quelques minutes<br>grâce au test FINDRISC</p>
- <div id="eventBadge"></div>
-
-<script>
+ <script>
 const params = new URLSearchParams(window.location.search);
 const name = params.get('name');
 
@@ -61,6 +57,11 @@ if (name) {
     "📍 " + decodeURIComponent(name);
 }
 </script>
+  <h1>🩺 Bienvenue</h1>
+  <p>Évaluez votre risque de diabète en quelques minutes<br>grâce au test FINDRISC</p>
+ <div id="eventBadge"></div>
+
+
   <button onclick="goToQuestionnaire()">Commencer le test</button>
 
 <script>
@@ -85,6 +86,5 @@ function goToQuestionnaire() {
 </script>
 
 </div>
-<script defer src="https://static.cloudflareinsights.com/beacon.min.js/v833ccba57c9e4d2798f2e76cebdd09a11778172276447" integrity="sha512-57MDmcccJXYtNnH+ZiBwzC4jb2rvgVCEokYN+L/nLlmO8rfYT/gIpW2A569iJ/3b+0UEasghjuZH/ma3wIs/EQ==" data-cf-beacon='{"version":"2024.11.0","token":"8607d2a720d14b038279025b2b5a82e5","server_timing":{"name":{"cfCacheStatus":true,"cfEdge":true,"cfExtPri":true,"cfL4":true,"cfOrigin":true,"cfSpeedBrain":true},"location_startswith":null}}' crossorigin="anonymous"></script>
 </body>
 </html>
