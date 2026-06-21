@@ -201,6 +201,22 @@
     .hero h1 { font-size: 1.5rem; }
     .card { padding: 20px; }
   }
+ function retourAccueil() {
+  const params = new URLSearchParams(window.location.search);
+  const eventId = params.get('event_id');
+  const eventName = params.get('name');
+
+  let url = 'index.html';
+  const newParams = new URLSearchParams();
+  if (eventId) newParams.set('event_id', eventId);
+  if (eventName) newParams.set('name', eventName);
+
+  const qs = newParams.toString();
+  if (qs) url += '?' + qs;
+
+  window.location.href = url;
+}
+
 </style>
 </head>
 <body>
@@ -368,6 +384,10 @@
     <div style="margin-top:20px; font-size:0.82rem; color:#9ca3af; font-style:italic;">
       ⚕️ Ce résultat est indicatif. Seul un professionnel de santé peut établir un diagnostic.
     </div>
+   <!-- ✅ Bouton retour -->
+<button class="btn-submit" style="margin-top:24px;" onclick="retourAccueil()">
+  🏠 Retour à l'accueil
+</button>
   </div>
 
 </div><!-- end container -->
