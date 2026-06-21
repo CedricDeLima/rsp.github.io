@@ -44,6 +44,35 @@
     transform: translateY(-2px);
     box-shadow: 0 6px 24px rgba(0,0,0,0.2);
   }
+ .btn-submit {
+  width: 100%;
+  max-width: 320px;
+  padding: 18px;
+  background: linear-gradient(135deg, #1a56db, #0e9f6e);
+  color: white;
+  border: none;
+  border-radius: 12px;
+  font-size: 1.1rem;
+  font-weight: 700;
+  cursor: pointer;
+  transition: opacity 0.2s, transform 0.1s;
+}
+
+.btn-submit:hover {
+  opacity: 0.9;
+  transform: translateY(-1px);
+}
+ .home-container {
+  text-align: center;
+  padding: 40px;
+  max-width: 500px;
+}
+
+.btn-submit {
+  margin-top: 20px;
+}
+
+
 </style>
 </head>
 <body>
@@ -63,7 +92,10 @@ if (name) {
  <div id="eventBadge"></div>
 
 
-  <button onclick="goToQuestionnaire()">Commencer le test</button>
+  <button class="btn-submit" onclick="goToQuestionnaire()">
+  🔍 Commencer le test FINDRISC
+</button>
+
 
 <script>
 function goToQuestionnaire() {
