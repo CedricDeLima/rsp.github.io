@@ -452,7 +452,7 @@ function updateProgress() {
 }
 
 function checkSubmit() {
-  const allAnswered = countAnswered() === 8;
+  const allAnswered = countAnswered() === 9;
   const rgpd = document.getElementById('rgpd1').checked && document.getElementById('rgpd2').checked;
   document.getElementById('submitBtn').disabled = !(allAnswered && rgpd);
 }
