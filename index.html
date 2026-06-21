@@ -50,6 +50,17 @@
 <div class="home-container">
   <h1>🩺 Bienvenue</h1>
   <p>Évaluez votre risque de diabète en quelques minutes<br>grâce au test FINDRISC</p>
+ <div id="eventBadge"></div>
+
+<script>
+const params = new URLSearchParams(window.location.search);
+const name = params.get('name');
+
+if (name) {
+  document.getElementById('eventBadge').textContent =
+    "📍 " + decodeURIComponent(name);
+}
+</script>
   <button onclick="goToQuestionnaire()">Commencer le test</button>
 
 <script>
